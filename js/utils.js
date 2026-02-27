@@ -9,7 +9,7 @@ export async function loadComponent(componentSelector, componentPath) {
     try {
         const response = await fetch(componentPath);
 
-        if (!response.ok) throw new Error(`Failed to load: ${componentPath}`);
+        if (!response.ok) new Error(`Failed to load: ${componentPath}`);
 
         target.innerHTML = await response.text();
     } catch (error) {
