@@ -79,3 +79,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 renderTickets(tickets);
+
+setInterval(fetchTickets, 5000);
