@@ -1,14 +1,16 @@
 import {loadComponent} from "./utils.js";
 import {initTicketForm} from "/js/ticket-form-handler.js";
 
-const username = "Garrett2404";
-const userEmail = "grjespersen@gmail.com";
+// const username = "Garrett2404";
+// const userEmail = "grjespersen@gmail.com";
 
 document.addEventListener("DOMContentLoaded", async () => {
     await loadComponent("#topbar", "/components/topbar.html");
 
     const profilePic = document.getElementById("profile-pic");
     const userDropdown = document.getElementById("user-dropdown");
+    const storedUser = sessionStorage.getItem("userData");
+    const user = storedUser ? JSON.parse(storedUser) : { name: "Guest", email: "guest@example.com" };
 
     if (profilePic && userDropdown) {
         // Toggle dropdown on click
@@ -30,16 +32,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         logoutLink.addEventListener("click", (event) => {
             event.preventDefault();
             sessionStorage.removeItem("isLoggedIn");
+            sessionStorage.removeItem("userData");
             window.location.href = "/pages/login-page.html";
         });
     }
 
     const userProfile = document.getElementById("dropdown-header");
 
-    if (username.length && userEmail.length !== 0) {
+    if (userProfile) {
         userProfile.innerHTML = `
-        <p class="user-name">${username}</p>
-        <p class="user-email">${userEmail}</p>
+        <p class="user-name">${user.name}</p>
+        <p class="user-email">${user.email}</p>
     `;
     } else {
         userProfile.innerHTML = `
@@ -50,9 +53,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const profileName = document.getElementById("main-menu-username");
 
-    if (username.length !== 0) {
+    if (profileName) {
         profileName.innerHTML = `
-            <p class="main-menu-username">${username}</p>
+            <p class="main-menu-username">${user.name}</p>
         `;
     } else {
         profileName.innerHTML = `

@@ -20,6 +20,7 @@ loginForm.addEventListener("submit", async (event) => {
         if (response.ok) {
             console.log("Login successful:", data.message);
             sessionStorage.setItem("isLoggedIn", "true");
+            sessionStorage.setItem("userData", JSON.stringify(data.user));
             window.location.href = "/index.html";
         } else {
             console.error("login failed", data.message);

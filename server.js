@@ -28,7 +28,9 @@ app.post("/login", (req, res) => {
     const { username, password } = req.body;
 
     if (username === adminUsername && password === adminPassword) {
-        res.json({ success: true, message: "Logged in as admin" });
+        res.json({ success: true, message: "Logged in as admin", user: { name: "Admin", email: "admin@helpdesk.com" } });
+    } else if (username === userUsername && password === userPassword) {
+        res.json({ success: true, message: "Logged in as user", user: { name: "User", email: "user@helpdesk.com" } });
     } else {
         res.status(401).json({ success: false, message: "Invalid credentials" });
     }
