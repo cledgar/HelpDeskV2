@@ -1,46 +1,66 @@
 <!-- Sidebar Navigation Component -->
-<div class="sidebar">
-  <!-- Sidebar Header with Logo -->
-  <div class="sidebar-title">
-    <img
-      class="sidebar-logo"
-      src="/assets/images/GeminiHelpDeskLogo-Picsart-BackgroundRemover.png"
-      alt="HelpDesk Logo"
-    />
-  </div>
+<nav id="sidebar">
+    <ul>
+        <!-- Sidebar Header with Logo -->
+        <li>
+            <img class="sidebar-logo" src="/assets/images/GeminiHelpDeskLogo-Picsart-BackgroundRemover.png"
+                alt="HelpDesk Logo">
+        </li>
 
-  <!-- Main Navigation Links -->
-  <div id="sidebar-content-id" class="sidebar-content">
-    <!-- Dashboard Home -->
-    <a class="nav-link" href="/index.html">
-      <span class="nav-icons">
-        <i class="fa-solid fa-house"></i>
-      </span>
-      <span class="nav-label">Dashboard</span>
-    </a>
+    <!-- Main Navigation Links -->
 
-    <!-- Support Ticket List -->
-    <a class="nav-link" href="/pages/ticket-page.html">
-      <span class="nav-icons">
-        <i class="fa-solid fa-ticket"></i>
-      </span>
-      <span class="nav-label">Tickets</span>
-    </a>
+        <!-- Dashboard Home -->
+        <li>
+            <a class="nav-link" href="/index.html">
+                <span class="nav-icons">
+                    <i class="fa-solid fa-house"></i>
+                </span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+        </li>
 
-    <!-- User Management -->
-    <a class="nav-link" href="/pages/user-page.html">
-      <span class="nav-icons">
-        <i class="fa-solid fa-users"></i>
-      </span>
-      <span class="nav-label">Users</span>
-    </a>
+        <!-- Support Ticket List -->
+        <li>
+            <a class="nav-link" href="/pages/ticket-page.html">
+                <span class="nav-icons">
+                    <i class="fa-solid fa-ticket"></i>
+                </span>
+                <span class="nav-label">Tickets</span>
+            </a>
+        </li>
 
-    <!-- Application Settings -->
-    <a id="settings-link" class="nav-link" href="/pages/settings-page.html">
-      <span class="nav-icons">
-        <i class="fa-solid fa-gear"></i>
-      </span>
-      <span class="nav-label">Settings</span>
-    </a>
-  </div>
-</div>
+        <!-- User Management -->
+        <li>
+            <a class="nav-link" href="/pages/user-page.html">
+                    <span class="nav-icons">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                    <span class="nav-label">Users</span>
+            </a>
+        </li>
+
+        <!-- Application Settings -->
+        <li>
+            <a id="settings-link" class="nav-link" href="/pages/settings-page.html">
+                <span class="nav-icons">
+                    <i class="fa-solid fa-gear"></i>
+                </span>
+                <span class="nav-label">Settings</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+<!-- Code to add drop down to a list item, might be helpful when we have an administrator view vs employee view vs client view
+<li>
+    <button class="dropdown-btn">
+        <svg xmlns="insert icon link"> (we are using i class, so this can be replaced with that)
+        <span>Name</span>
+        <svg xmlns="insert icon link">
+    </button>
+    <ul class="sub-menu">
+        <li><a href="placeholder">Name</a></li>
+        etc
+    </ul>
+</li>   -->

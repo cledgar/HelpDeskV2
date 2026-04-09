@@ -36,11 +36,13 @@ body {
     background: #0e2d45;
     padding: 2rem;
     border-radius: 8px;
-    width: 400px;
+    width: 450px;
     max-width: 90vw;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .register-modal h2 {
@@ -48,6 +50,18 @@ body {
     font-weight: bold;
     color: #94a3b8;
     align-self: center;
+}
+
+/* First Name Last Name Layout */
+.name-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.name-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 /* Registration Form Layout */
@@ -99,6 +113,54 @@ body {
     font-family: inherit;
     background-color: #133e5e;
     color: #94a3b8;
+}
+
+/* Password Requirements Box */
+.requirements-box {
+    background-color: #0a1e2e;
+    border: 1px solid #2c70a2;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 10px;
+}
+
+.requirements-title {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin: 0 0 0.5rem 0;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.requirements-list li {
+    font-size: 0.8rem;
+    color: #e05252;
+    padding-left: 1.2rem;
+    position: relative;
+}
+
+.requirements-list li::before {
+    content: "✗";
+    position: absolute;
+    left: 0;
+    color: #e05252;
+}
+
+.requirements-list li.met {
+    color: #4caf50;
+}
+
+.requirements-list li.met::before {
+    content: "✓";
+    color: #4caf50;
 }
 
 /* Focus and Placeholder Effects */

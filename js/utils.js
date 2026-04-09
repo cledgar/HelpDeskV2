@@ -32,7 +32,7 @@ export async function loadComponent(componentSelector, componentPath) {
  * IIFE for Authentication Guard:
  * Redirects the user to the login page if they are not logged in.
  */
-(function() {
+/*(function() {
     const isLoggedIn = sessionStorage.getItem("isLoggedIn");
 
     // Allow access to the login and registration pages without authentication
@@ -44,4 +44,4 @@ export async function loadComponent(componentSelector, componentPath) {
     if (!isLoggedIn && !isPublicPage) {
         window.location.href = "/";
     }
-})();
+})();*/

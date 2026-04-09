@@ -3,6 +3,8 @@
  * @description Handles new user registration via the registration form.
  */
 
+import { supabase } from "/js/supabase.js";
+
 const registrationForm = document.getElementById("register-form");
 
 /**
@@ -12,36 +14,68 @@ const registrationForm = document.getElementById("register-form");
 registrationForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+    const errorMsg = document.getElementById("error-msg");
+    const passwordInput = document.getElementById("password");
 
-    try {
-        // Send registration request to the server
-        const response = await fetch("/registerUser", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username, password })
-        });
+    passwordInput.addEventListener("input", () => {
+        const val = passwordInput.value;
 
-        const data = await response.json();
+        toggleReq("req-length", val.length >= 8);
+        toggleReq("req-upper", /[A-Z]/.test(val));
+        toggleReq("req-lower", /[a-z]/.test(val));
+        toggleReq("req-number", /[0-9]/.test(val));
+        toggleReq("req-special", /[^A-Za-z0-9]/.test(val));
+    });
 
-        if (response.ok) {
-            console.log("Registration Successful:", data.message);
-            // Redirect to login page after successful registration
-            window.location.href = "/pages/login-page.html";
+    function toggleReq(id, met) {
+        const el = document.getElementById(id);
+        if (met) {
+            el.classList.add("met");
         } else {
-            console.error("registration failed", data.message);
-            // Display error message (e.g., username already exists)
-            const errorMsg = document.getElementById("error-msg");
-            if (errorMsg) {
-                errorMsg.textContent = data.message;
-                errorMsg.style.display = "block";
-            }
+            el.classList.remove("met");
         }
-    } catch (error) {
-        console.error("Error during registration:", error);
     }
+    if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match";
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    // Create Authorized Account
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password
+    });
+
+    if (authError) {
+        errorMsg.textContent = authError.message;
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    // Add user info
+    const { error: profileError } = await supabase
+        .from("users")
+        .insert([{
+            id: authData.user.id,
+            username,
+            email,
+            phone,
+            role: "client"
+        }]);
+
+    if (profileError) {
+        errorMsg.textContent = "Registration failed. Please try again.";
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    console.log("Registration successful!");
+    window.location.href = "/pages/login-page.html";
 
 });

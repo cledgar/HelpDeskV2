@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="en">
 <head>
     <!-- Basic Metadata -->
@@ -20,42 +20,267 @@
     <!-- Main Layout Container -->
     <div class="app-container">
         <!-- Sidebar Injection Point -->
-        <div id="sidebar"></div>
+        <nav id="sidebar"></nav>
 
         <!-- Main Content Area -->
         <div class="main">
             <!-- Topbar Injection Point -->
             <div id="topbar"></div>
 
-            <!-- Settings Grid Layout -->
-            <div class="grid-container">
-                <!-- Grid items containing various settings options -->
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+            <!-- Settings Options Container -->
+            <div class="settings-container">
+
+                <!-- Settings header -->
+                <div class="settings-header">
+                    <h1>Settings</h1>
+                    <p>Manage your preferences</p>
                 </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+
+                <!-- Profile Settings Section -->
+                <div class="settings-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-user"></i>
+                        <h2>Profile</h2>
+                    </div>
+
+                    <!-- Adjustable Profile Settings -->
+                    <div class="settings-card">
+
+                        <!-- Upload Profile Picture -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Profile Picture</span>
+                                <span class="settings-desc">Upload a Photo</span>
+                            </div>
+                            <input type="file" id="profilePic" accept="image/*">
+                            <img id="preview" src="#" alt="Image Preview" style="display:none;" />
+                            <script>
+                                document.getElementById("profilePic").addEventListener('change', function() {
+                                    let file = this.files[0];
+                                    let reader = new FileReader();
+
+                                    reader.onload = function (event) {
+                                        let base64String = event.target.result;
+                                        document.getElementById('preview').src = base64String;
+                                        document.getElementById('priview').style.display = 'block';
+                                        console.log(base64String);
+                                    };
+                                    reader.readAsDataURL(file);
+                                });
+                            </script>>
+                            <!-- <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name"> -->
+                        </div>
+
+                        <!-- Settings to Change First Name -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">First Name</span>
+                                <span class="settings-desc">Your first name</span>
+                            </div>
+                            <input type="text" id="firstname-input" class="settings-input" placeholder="Enter First Name">
+                        </div>
+
+                        <!-- Settings to Change Last Name -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Last Name</span>
+                                <span class="settings-desc">Your last name</span>
+                            </div>
+                            <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name">
+                        </div>
+                        <!-- Change Pronouns -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Pronouns</span>
+                                <span class="settings-desc">Your preferred pronouns</span>
+                            </div>
+                            <label for="pronouns">
+                                <select name="pronouns" id="pronouns">
+                                    <option value="select">Select One</option>
+                                    <option value="She/Her">She/Her</option>
+                                    <option value="He/Him">He/Him</option>
+                                    <option value="They/Them">They/Them</option>
+                                </select>
+                            </label>
+                            <!-- <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name"> -->
+                        </div>
+                    </div>
                 </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+
+                <!-- Account Information Settings Section -->
+                <div class="settings-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-address-card"></i>
+                        <h2>Account Information</h2>
+                    </div>
+
+                    <!-- Adjustable Account Information Settings -->
+                    <div class="settings-card">
+
+                        <!-- Change Current Password -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Current Password</span>
+                                <span class="settings-desc">Enter your current password to make changes</span>
+                            </div>
+                            <input type="password" id="current-password" class="settings-input" placeholder="Enter Password">
+                        </div>
+
+                        <!-- Change Username -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Username</span>
+                                <span class="settings-desc">Your account login for the app</span>
+                            </div>
+                            <input type="text" id="username-input" class="settings-input" placeholder="Enter Username">
+                        </div>
+
+                        <!-- Change Contact Email -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Email Address</span>
+                                <span class="settings-desc">Your contact email address</span>
+                            </div>
+                            <input type="text" id="email-input" class="settings-input" placeholder="Enter Email">
+                        </div>
+
+                        <!-- Change Contact Phone Number-->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Phone Number</span>
+                                <span class="settings-desc">Your contact phone number</span>
+                            </div>
+                            <input type="text" id="phoneNumber-input" class="settings-input" placeholder="Enter Phone Number">
+                        </div>
+                    </div>
                 </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+
+                <!-- Notifications Settings Section -->
+                <div class="settings-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-alarm-clock"></i>
+                        <h2>Notifications</h2>
+                    </div>
+
+                    <!-- Adjustable Notifications Settings -->
+                    <div class="settings-card">
+
+                        <!-- Toggle Ticket Notification Settings -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Ticket Updates</span>
+                                <span class="settings-desc">Get notified when a ticket is updated</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="tickets-notif-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Toggle New Assingment Notifications -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">New Assignments</span>
+                                <span class="settings-desc">Get notified when a ticket is assigned to you</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="assignments-notif-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Toggle System Announcement Notifications -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">System Announcements</span>
+                                <span class="settings-desc">Receive important system-wide Announcements</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="system-notif-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+
+                <!-- Appearance Settings Section -->
+                <div class="settings-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-palette"></i>
+                        <h2>Appearance</h2>
+                    </div>
+
+                    <!-- Adjustable Appearance Settings -->
+                    <div class="settings-card">
+
+                        <!-- Toggle Dark Mode -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Dark Mode</span>
+                                <span class="settings-desc">Switch between light and dark theme</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="dark-mode-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+
+                <!-- Accessibility Settings Section -->
+                <div class="settings-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-universal-access"></i>
+                        <h2>Accessibility</h2>
+                    </div>
+
+                    <!-- Adjustable Accessibility Settings -->
+                    <div class="settings-card">
+
+                        <!-- Toggle High Contrast Mode -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">High Contrast Mode</span>
+                                <span class="settings-desc">Switch to High Contrast Mode </span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="highContrast-mode-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Adjust Font Size -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Font Size</span>
+                                <span class="settings-desc">Change Font Size</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="highContrast-mode-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Adjust Font Type -->
+                        <div class="settings-row">
+                            <div class="settings-info">
+                                <span class="settings-label">Font Type</span>
+                                <span class="settings-desc">Change Font Type</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="highContrast-mode-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
-                </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
-                </div>
-                <div class="grid-item">
-                    <button class="theme-toggle-button">Theme</button>
+
+                <!-- Save Changes Button -->
+                <div class="settings-footer">  
+                    <span id="save-status" class="save-status"></span>
+                    <button id="save-settings-btn" class="save-btn">
+                        <i class="fa-solid fa-floppy-disk"></i>Save Changes
+                    </button>
                 </div>
             </div>
         </div>
@@ -64,5 +289,6 @@
     <!-- Frontend logic for components -->
     <script type="module" src="/js/sidebar.js"></script>
     <script type="module" src="/js/topbar.js"></script>
+    <script type="module" src="/js/settings-page.js"></script>
 </body>
 </html>

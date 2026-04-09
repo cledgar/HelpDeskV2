@@ -1,0 +1,36 @@
+I just wanted a section where I could write down important information or comments. - ZBB
+
+
+User Authentication may not work properly on github since its a static system, we may have to create constants for our users or eventually move away from github.
+User accounts might need the same thing.
+
+
+Things to Add:
+
+First name, last name to supabase
+Account verification prompt
+Forgot password prompt
+Online/offline/available hours for each users
+Admin view
+Employee view
+Client view
+Landing pages
+Public FAQ
+AI assistant
+Accessibility (Changed Nav bar to help)
+Cookies?
+
+
+Things to Fix:
+
+Fix Password requirements not updating
+Remove create new ticket from topbar on settings page/landing page
+Change "guest" to match user information
+Profile picture, pronouns style
+Input Box for username/password sizing is off
+Dark Mode not on all pages
+Dark Mode doesn't effect topbar
+Sidebar logo header is off
+Verification to localhost isn't working
+move profile settings to under profile picture, maybe
+Adjust settings page style, make centered or fill screen more

@@ -4,7 +4,7 @@
  * Defines the look and layout of the left navigation sidebar.
  */
 
-.sidebar {
+#sidebar {
     min-width: 110px;
     width: 13vw;
     height: 100vh;
@@ -15,44 +15,72 @@
     display: flex;
     flex-direction: column;
     margin: 0;
+    /*added these three lines to help keep sidebar in place when scrolling,
+    may need to adjust*/
+    position: sticky;
+    top: 0;
+    align-self: start;
 }
 
-/* Sidebar Logo Styling */
-.sidebar-logo {
-    width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-}
-
-/* Container for navigation links */
-.sidebar-content {
-    gap: 10px;
-    flex-grow: 1;
-    box-sizing: border-box;
+/* Remove default list styles and spacing, makes the ul a flex column */
+#sidebar ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    margin-top: 10px;
+    flex-grow: 1;
 }
 
-/* Individual navigation link styles */
-.sidebar-content a {
+/* Sidebar Logo Container */
+#sidebar > ul > li:first-child a{
+    width: 80%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    
+}
+ /* Logo Image */
+.sidebar-logo {
+    font-weight: 600;
+    width: 140%;
+    height: auto;
+}
+
+/* Highlight Active Link */
+#sidebar ul li.active a{
+    background-color: #313131;
+    color: white;
+}
+
+/* All Navigation Links*/
+#sidebar a {
+    display: flex;
+    border-radius: .5em;
+    align-items: center;
+    gap: 1em;
     color: white;
     text-decoration: none;
     font-size: clamp(0.8rem, 1.5vw, 1.1rem);
-    padding: 20px;
+    padding: .85em;
     white-space: nowrap;
     overflow: hidden;
 }
 
+/* Icon Adjustments */
+#sidebar i{
+    flex-shrink: 0;
+    color: white;
+}
+
 /* Hover effect for links */
-.sidebar-content a:hover {
+#sidebar a:hover {
     background-color: #313131;
     transition: background-color 0.6s ease;
 }
 
 /* Push settings link to the bottom of the sidebar */
-#settings-link {
+#sidebar ul li:last-child {
     margin-top: auto;
 }
