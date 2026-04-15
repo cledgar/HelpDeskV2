@@ -3,8 +3,9 @@
  * @description Manages the top bar component, including user profile display, dropdown menu, and logout functionality.
  */
 
-import {loadComponent} from "./utils.js";
-import {initTicketForm} from "/js/ticket-form-handler.js";
+import { loadComponent } from "./utils.js";
+import { initTicketForm } from "/js/ticket-form-handler.js";
+import { supabase } from "/js/supabase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     // Load the top bar component HTML
@@ -13,17 +14,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profilePic = document.getElementById("profile-pic");
     const userDropdown = document.getElementById("user-dropdown");
     
-    // Retrieve user data from sessionStorage, default to Guest if not found
-    const storedUser = sessionStorage.getItem("userData");
-    const user = storedUser ? JSON.parse(storedUser) : {username: "Guest"};
+    // Retrieve user data from localStorage, default to Guest if not found
+    const storedUser = localStorage.getItem("userData");
+    console.log("stored user:", storedUser);
+    const user = storedUser ? JSON.parse(storedUser) : { username: "Guest" };
+    console.log("parsed user:", user);
 
-    if (profilePic && userDropdown) {
-        // Toggle user dropdown menu visibility on profile picture click
+
+    // Display Profile Picture if Saved
+    if (profilePic) {
+        if (user.profilePic_url) {
+            profilePic.src = user.profielPic_url;
+        }
+
+        // Toggle user dropdown menu visibilty on profile picture click
         profilePic.addEventListener("click", (event) => {
-            event.stopPropagation(); // Prevent the click from bubbling up and closing the dropdown immediately
+            event.stopPropagation();
             userDropdown.classList.toggle("show");
         });
-
+    }
+    
+    if (userDropdown) {
         // Close dropdown menu when clicking anywhere else on the document
         window.addEventListener("click", () => {
             if (userDropdown.classList.contains("show")) {
@@ -35,11 +46,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Handle logout link click
     const logoutLink = document.getElementById("logout-link");
     if (logoutLink) {
-        logoutLink.addEventListener("click", (event) => {
+        logoutLink.addEventListener("click", async (event) => {
             event.preventDefault();
-            // Clear session data and redirect to login page
-            sessionStorage.removeItem("isLoggedIn");
-            sessionStorage.removeItem("userData");
+            // SIgn out of Supabase Auth and clear localStorage
+            await supabase.auth.signOut();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userData");
             window.location.href = "/pages/login-page.html";
         });
     }

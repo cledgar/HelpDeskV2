@@ -130,8 +130,11 @@
     font-size: 0.9rem;
     color: #1a1a1a;
     width: 220px;
+    min-width: 220px;
+    max-width: 220px;
     outline: none;
     transition: border-color 0.2s ease;
+    box-sizing: border-box;
 }
 
 /* Highlights Input Box when Selected */

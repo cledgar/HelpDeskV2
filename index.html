@@ -1,45 +1,138 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Basic Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Desk - Landing Page</title>
     <link rel="icon" href="/assets/images/favicon.png">
-    <title>Help Desk - Dashboard</title>
-
-    <!-- Global and Component Stylesheets -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/topbar.css">
-    <link rel="stylesheet" href="css/tickets-template.css">
-
-    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="/css/landing.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/d357d72767.js" crossorigin="anonymous"></script>
+    <style> .navbar { background: #133e5e; } </style>
+
 </head>
 <body>
 
-    <!-- Main Layout Container -->
-    <div class="app-container">
-        <!-- Sidebar Injection Point -->
-        <nav id="sidebar"></nav>
-
-        <!-- Main Content Area -->
-        <div class="main">
-            <!-- Topbar Injection Point -->
-            <div id="topbar"></div>
-
-            <!-- Page-Specific Content -->
-            <div class="content">
-                <!-- Ticket List Injection Point -->
-                <div id="ticket-container"></div>
+    <!-- Navbar -->
+     <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="nav-logo">
+                <img> <!-- Finish adding logo -->
+                <span>Help Desk</span>
+            </div>
+            <div class="nav-links">
+                <a href="/pages/about.html" class="nav-link">About</a>
+                <a href="/pages/faq.html" class="nav-link">FAQ</a>
+                <a href="/pages/login-page.html" class="nav-link">Log in</a>
+                <a href="/pages/user-registration.html" class="nav-btn primary">Sign up</a>
             </div>
         </div>
-    </div>
+     </nav>
 
-    <!-- Frontend logic for components and dashboard -->
-    <script type="module" src="/js/supabase.js"></script>
-    <script type="module" src="js/sidebar.js"></script>
-    <script type="module" src="js/topbar.js"></script>
-    <script type="module" src="js/tickets-template.js"></script>
+     <!-- Main Landing Section -->
+    <section class="landing">
+        <div class="landing-inner">
+            <div class="landing-badge">Streamlined Support</div>
+            <h1 class="landing-title">Support made <span class="landing-accent">simple</span></h1>
+            <p class="landing-subtitle">Manage tickets, users, and requests all in one place. Built for teams that care about getting things done.</p>
+            <div class="landing-btns">
+                <a href="/pages/user-registration.html" class="landing-btn primary">Get Started</a>
+                <a href="/pages/about.html" class="landing-btn secondary">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+            </div>   
+        </div>
+        <div class="landing-visual">
+            <div class="visual-card">
+                <div class="visual-card-header">
+                    <span class="visual-dot red"></span>
+                    <span class="visual-dot amber"></span>
+                    <span class="visual-dot green"></span>
+                    <span class="visual-card-title">Active Tickets</span>
+                </div>
+                <div class="visual-ticket">
+                    <span class="ticket-badge high">High</span>
+                    <span class="ticket-title">Login page not loading</span>
+                    <span class="ticket-user">Assigned to: Tod</span>
+                </div>
+                <div class="visual-ticket">
+                    <span class="ticket-badge medium">Medium</span>
+                    <span class="ticket-title">Password reset not working</span>
+                    <span class="ticket-user">Assigned to: Marie</span>
+                </div>
+                <div class="visual-ticket">
+                    <span class="ticket-badge low">Low</span>
+                    <span class="ticket-title">Update profile picture</span>
+                    <span class="ticket-user">Assigned to: Marco</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-inner">
+            <h2 class="features-title">Everything you need</h2>
+            <p class="features-subtitle">A complete help desk solution built for modern teams</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-ticket"></i></div>
+                    <h3>Ticket Management</h3>
+                    <p>Create, assign and track support tickets from submission to resolution.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-users"></i></div>
+                    <h3>User Management</h3>
+                    <p>Manage clients, employees, and admins with role-based access control.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Dashboard</h3>
+                    <p>Get a bird's eye view of all activity, tickets, and team performance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-bell"></i></div>
+                    <h3>Notifications</h3>
+                    <p>Stay up to date with ticket updates, assignments, and announcements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+                    <h3>Secure Access</h3>
+                    <p>Role-based permissions ensure everyone only sees what they need to.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-gear"></i></div>
+                    <h3>Customizable</h3>
+                    <p>Personalize your experience with themes, notifications, and profile settings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-inner">
+            <h2>Ready to get started?</h2>
+            <p>Join your team on Help Desk today.</p>
+            <div class="cta-btns">
+                <a href="/pages/user-registration.html" class="landing-btn primary">Create an Account</a>
+                <a href="pages/faq.html" class="landing-btn secondary">View FAQ <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="footer-logo">Help Desk</span>
+            <div class="footer-links">
+                <a href="/pages/about.html">About</a>
+                <a href="/pages/faq.html">FAQ</a>
+                <a href="/pages/login-page.html">Log in</a>
+                <a href="/pages/user-registration.html">Sign up</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/js/landing.js"></script>
 </body>
 </html>

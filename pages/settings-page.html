@@ -62,12 +62,12 @@
                                     reader.onload = function (event) {
                                         let base64String = event.target.result;
                                         document.getElementById('preview').src = base64String;
-                                        document.getElementById('priview').style.display = 'block';
+                                        document.getElementById('preview').style.display = 'block';
                                         console.log(base64String);
                                     };
                                     reader.readAsDataURL(file);
                                 });
-                            </script>>
+                            </script>
                             <!-- <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name"> -->
                         </div>
 
@@ -256,7 +256,7 @@
                                 <span class="settings-desc">Change Font Size</span>
                             </div>
                             <label class="toggle">
-                                <input type="checkbox" id="highContrast-mode-toggle">
+                                <input type="checkbox" id="fontSize-toggle">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -268,7 +268,7 @@
                                 <span class="settings-desc">Change Font Type</span>
                             </div>
                             <label class="toggle">
-                                <input type="checkbox" id="highContrast-mode-toggle">
+                                <input type="checkbox" id="fontType-toggle">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>

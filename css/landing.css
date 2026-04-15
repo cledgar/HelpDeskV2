@@ -1,0 +1,458 @@
+/*
+* Landing Page Styling
+* --------------------
+* Styles for the public-facing landing page.
+*/
+
+*,*::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f8fafc;
+    color: #1a1a1a;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Navbar */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #133e5e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.navbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.nav-logo-img {
+    height: 32px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #fff;
+}
+
+.nav-btn {
+    font-size: 0.85rem;
+    padding: 0.45rem 1.1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-btn.secondary {
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+.nav-btn.secondary:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.nav-btn.primary {
+    background: #2c70a2;
+    color: #fff;
+    border: 1px solid #2c70a2;
+}
+
+.nav-btn.primary:hover {
+    background: #1a5276;
+}
+
+/* Main Landing Section */
+.landing {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.landing-badge {
+    display: inline-block;
+    background: #e8f0f7;
+    color: #133e5e;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.3rem 0.9rem;
+    border-radius: 2rem;
+    letter-spacing: 0.04rem;
+}
+
+.landing-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: #133e5e;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+}
+
+.landing-accent {
+    color: #2c70a2;
+}
+
+.landing-subtitle {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 2rem;
+    max-width: 420px;
+}
+
+.landing-btns {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.landing-btn {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.landing-btn.primary {
+    background: #133e5e;
+    color: #fff;
+}
+
+.landing-btn.primary:hover {
+    background: #1a5276;
+}
+
+.landing-btn.secondary {
+    background: #fff;
+    color: #133e5e;
+    border: 1px solid #d1d5db;
+}
+
+.landing-btn.secondary:hover {
+    border-color: #133e5e;
+    background: #f0f4f8;
+}
+
+/* Landing Visual Card */
+.landing-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.visual-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(19,62,94,0.12);
+    padding: 1.25rem;
+    width: 100%;
+    max-width: 360px;
+    border: 1px solid #e5e7eb;
+}
+
+.visual-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.visual-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.visual-dot.red {background: #ef4444;}
+.visual-dot.amber {background: #f59e0b;}
+.visual-dot.green {background: #22c55e;}
+
+.visual-card-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #133e5e;
+    margin-left: 0.5rem;
+}
+
+.visual-ticket {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: #f9fafc;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+}
+
+.visual-ticket:last-child {
+    margin-bottom: 0;
+}
+
+.ticket-badge {
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2rem;
+    flex-shrink: 0;
+}
+
+.ticket-badge.high {background: #fee2e2; color: #991b1b;}
+.ticket-badge.medium {background: #fef3c7; color: #92400e;}
+.ticket-badge.low {background: #dcfce7; color: #166534;}
+
+.ticket-title {
+    font-size: 0.82rem;
+    color: #1a1a1a;
+    flex: 1;
+}
+
+.ticket-user {
+    font-size: 0.72rem;
+    color: #888;
+    width: 100%;
+    padding-left: calc(0.75rem + 10px);
+}
+
+/* Features Section */
+.features {
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 5rem 2rem;
+}
+
+.features-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.features-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #133e5e;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.features-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 3rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 4px 16px rgba(19,62,94,0.1);
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    background: #e8f0f7;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #133e5e;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #133e5e;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* CTA Section */
+.cta {
+    padding: 5rem 2rem;
+    background: #133e5e;
+}
+
+.cta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.cta p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+.cta-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta .landing-btn.primary {
+    background: #fff;
+    color: #133e5e;
+}
+
+.cta .landing-btn.primary:hover {
+    background: #e8f0f7;
+}
+
+.cta .landing-btn.secondary {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255,255,255,0.4);
+}
+
+.cta .landing-btn.secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #fff;
+}
+
+/* Footer */
+.footer {
+    background: #0e2d45;
+    padding: 1.5rem 2rem;
+}
+
+.footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-logo {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+/* Animations */
+@keyframes fadeUp {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.landing-inner {
+    animation: fadeUp 0.6s ease forwards;
+}
+
+.landing-visual {
+    animation: fadeUp 0.6s ease 0.2s forwards;
+    opacity: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .landing {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem;
+        gap: 2rem;
+    }
+
+    .landing-title {
+        font-size: 2rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        gap: 0.75rem;
+    }
+}

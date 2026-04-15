@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Desk - FAQ</title>
+    <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="stylesheet" href="/css/landing.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/company-faq.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/d357d72767.js" crossorigin="anonymous"></script>
+    
+</head>
+<body class="landing-page">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="nav-logo">
+                <img src="/assets/images/GeminiHelpDeskLogo-Picsart-BackgroundRemover.png" alt="Help Desk Logo" class="nav-logo-img">
+                <span>Help Desk</span>
+            </div>
+            <div class="nav-links">
+                <a href="/index.html" class="nav-link">Home</a>
+                <a href="/pages/about.html" class="nav-link">About</a>
+                <a href="/pages/login-page.html" class="nav-btn secondary">Log in</a>
+                <a href="/pages/user-registration.html" class="nav-btn primary">Sign up</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="page-container">
+            <h1 class="page-title">Frequently Asked Questions</h1>
+            <p class="page-subtitle">Find answers to common questions</p>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How do I create a support ticket?
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    Once logged in, click the "Create New Ticket" button in the top bar. Fill in the title, description, and priority level, then click Submit.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Sample Question
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    Sample answer
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer Component Insertion -->
+    <div id="footer"></div>
+
+    <script type="module" src="/js/footer.js"></script>
+    <script>
+        // FAQ accordion toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('.faq-icon');
+                answer.classList.toggle('open');
+                icon.classList.toggle('open');
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -6,6 +6,29 @@
 import { supabase } from "/js/supabase.js";
 
 const registrationForm = document.getElementById("register-form");
+const passwordInput = document.getElementById("password");
+const login = document.getElementById("login-button");
+
+/** Password Requirement Check */
+function toggleReq(id, met) {
+    const el = document.getElementById(id);
+    if (met) {
+        el.classList.add("met");
+    } else {
+        el.classList.remove("met");
+    }
+}
+
+passwordInput.addEventListener("input", () => {
+    const val = passwordInput.value;
+
+    toggleReq("req-length", val.length >= 8);
+    toggleReq("req-upper", /[A-Z]/.test(val));
+    toggleReq("req-lower", /[a-z]/.test(val));
+    toggleReq("req-number", /[0-9]/.test(val));
+    toggleReq("req-special", /[^A-Za-z0-9]/.test(val));
+});
+
 
 /**
  * Handle registration form submission.
@@ -20,26 +43,8 @@ registrationForm.addEventListener("submit", async (event) => {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirm-password").value;
     const errorMsg = document.getElementById("error-msg");
-    const passwordInput = document.getElementById("password");
 
-    passwordInput.addEventListener("input", () => {
-        const val = passwordInput.value;
 
-        toggleReq("req-length", val.length >= 8);
-        toggleReq("req-upper", /[A-Z]/.test(val));
-        toggleReq("req-lower", /[a-z]/.test(val));
-        toggleReq("req-number", /[0-9]/.test(val));
-        toggleReq("req-special", /[^A-Za-z0-9]/.test(val));
-    });
-
-    function toggleReq(id, met) {
-        const el = document.getElementById(id);
-        if (met) {
-            el.classList.add("met");
-        } else {
-            el.classList.remove("met");
-        }
-    }
     if (password !== confirmPassword) {
         errorMsg.textContent = "Passwords do not match";
         errorMsg.style.display = "block";
@@ -66,7 +71,9 @@ registrationForm.addEventListener("submit", async (event) => {
             username,
             email,
             phone,
-            role: "client"
+            role: "client",
+            firstname: document.getElementById("first").value.trim(),
+            lastname: document.getElementById("last").value.trim()
         }]);
 
     if (profileError) {
@@ -78,4 +85,8 @@ registrationForm.addEventListener("submit", async (event) => {
     console.log("Registration successful!");
     window.location.href = "/pages/login-page.html";
 
+});
+
+login.addEventListener("click", () => {
+    window.location.href = "/pages/user-registration.html";
 });

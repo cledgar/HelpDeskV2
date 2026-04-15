@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Basic Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/images/favicon.png">
+    <title>Help Desk - Dashboard</title>
+
+    <!-- Global and Component Stylesheets -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/topbar.css">
+    <link rel="stylesheet" href="/css/tickets-template.css">
+
+    <!-- Font Awesome for Icons -->
+    <script src="https://kit.fontawesome.com/d357d72767.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Main Layout Container -->
+    <div class="app-container">
+        <!-- Sidebar Injection Point -->
+        <nav id="sidebar"></nav>
+
+        <!-- Main Content Area -->
+        <div class="main">
+            <!-- Topbar Injection Point -->
+            <div id="topbar"></div>
+
+            <!-- Page-Specific Content -->
+            <div class="content">
+                <!-- Ticket List Injection Point -->
+                <div id="ticket-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frontend logic for components and dashboard -->
+    <script type="module" src="/js/supabase.js"></script>
+    <script type="module" src="/js/sidebar.js"></script>
+    <script type="module" src="/js/topbar.js"></script>
+    <script type="module" src="/js/tickets-template.js"></script>
+</body>
+</html>

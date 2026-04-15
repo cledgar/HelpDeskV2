@@ -54,17 +54,27 @@ loginForm.addEventListener("submit", async (event) => {
     } 
 
     // Look for user within database with matching username and password
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
         .from("users")
         .select("*")
         .eq("id", data.user.id)
         .single();
 
-    
+    console.log("profile:", profile);
+    console.log("profileError:", profileError);
+    console.log("auth user id:", data.user.id);
+
+    if (profileError || !profile) {
+        errorMsg.textContent = "Could not load user profile. Please try again.";
+        errorMsg.style.display = "block";
+        return;
+    }
+
+
     // User found - saves to localStorage and redirects.
     localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userData", JSON.stringify(data));
-    window.location.href = "/index.html";
+    localStorage.setItem("userData", JSON.stringify(profile));
+    window.location.href = "/pages/dashboard.html";
     
 });
 /** Temporary test - delete after debugging

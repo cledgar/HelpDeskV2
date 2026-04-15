@@ -3,6 +3,8 @@
  * @description Loads the Settings as the User Set Them
  */
 
+import { supabase } from "/js/supabase.js";
+
 document.addEventListener("DOMContentLoaded", () => {
     
     // --- Element References ---
@@ -17,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("save-settings-btn");
     const saveStatus = document.getElementById("save-status");
     const phoneNumberInput = document.getElementById("phoneNumber-input");
+    const profilePicInput = document.getElementById("profilePic");
+    const profilePreview = document.getElementById("preview");
 
     // --- Loads the Settings Preferences from Local Storage ---
     function loadSettings() {
@@ -40,6 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
             firstNameInput.value = user.firstname || "";
             lastNameInput.value = user.lastname || "";
             phoneNumberInput.value=user.phonenumber || "";
+
+            // --- Load Profile Picture if saved ---
+            if (user.profilePic_url) {
+                profilePreview.src = user.profilePic_url;
+                profilePreview.style.display = "block";
+            }
         }
     }
 
@@ -61,8 +71,61 @@ document.addEventListener("DOMContentLoaded", () => {
         applyDarkMode(darkModeToggle.checked);
     });
 
+    // --- Preview Profile Picture When Selected ---
+    profilePicInput.addEventListener("change", () => {
+        const file = profilePicInput.files[0];
+        if (!file) return;
+
+        // --- Validate File Size (2MB max) ---
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Image must be under 2MB");
+            profilePicInput.value = "";
+            return;
+        }
+
+        // --- Validate File Type ---
+        if (!file.type.startsWith("image/")) {
+            alert("Please upload an image file");
+            profilePicInput.value = "";
+            return;
+        }
+
+        // --- Show Preview ---
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            profilePreview.src = e.target.result;
+            profilePreview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // --- Upload Profile Picture to Supabase Storage ---
+    async function uploadProfilePicture(userId) {
+        const file = profilePicInput.files[0];
+        if (!file) return null;
+
+        // --- Store in a Folder Named After the User's ID ---
+        const filePath = '${userId}/${Date.now()}_${file.name}';
+
+        const { error: uploadError } = await supabase.storage
+            .from("profile-pic")
+            .upload(filePath, file, { upsert: true });
+
+        if (uploadError) {
+            console.error("Upload error:", uploadError.message);
+            return null;
+        }
+
+        // --- Get The Public URL of the Uploaded Image ---
+        const { data } = supabase.storage
+            .from("profile-pic")
+            .getPublicUrl(filePath);
+
+        return data.publicUrl;
+    }
+
     // --- Save All Settings ---
-    saveBtn.addEventListener("click", () => {
+    saveBtn.addEventListener("click", async () => {
         
         // --- Save Dark Mode Changes ---
         localStorage.setItem("darkMode", darkModeToggle.checked);
@@ -72,14 +135,45 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("assignmentsNotif", assignmentsNotifToggle.checked);
         localStorage.setItem("systemNotif", systemNotifToggle.checked);
 
-        // --- Save Account and Profile Changes ---
+        // --- Get Current User ---
         const storedUser = localStorage.getItem("userData");
         const user = storedUser ? JSON.parse(storedUser) : {};
+
+        // --- Save Account and Profile Changes to Supabase ---
+        await supabase
+            .from("users")
+            .update({
+                username: usernameInput.value.trim(),
+                email: emailInput.value.trim(),
+                firstname: firstNameInput.value.trim(),
+                lastname: lastNameInput.value.trim(),
+                phonenumber: phoneNumberInput.value.trim(),
+                pronouns: document.getElementById("pronouns").value
+            })
+            .eq("id", user.id);
+
+        // --- Update Local Storage to Show Changes ---
         user.username = usernameInput.value.trim();
         user.email = emailInput.value.trim();
         user.firstname = firstNameInput.value.trim();
         user.lastname = lastNameInput.value.trim();
-        user.phonenumber = phoneNumberInput.value.trim();
+        user.phone = phoneNumberInput.value.trim();
+        localStorage.setItem("userData",JSON.stringify(user));
+
+        // --- Upload Profile Picture if a New One was Selected ---
+        if (profilePicInput.files[0]) {
+            const profilePicUrl = await uploadProfilePicture(user.id);
+            if (profilePicUrl) {
+                user.profilePic_url = profilePicUrl;
+
+                // --- Save Profile Picture URL to Supabase Users Table ---
+                await supabase
+                    .from("users")
+                    .update({ profilePic_url: profilePicUrl })
+                    .eq("id", user.id);
+            }
+        }
+
         localStorage.setItem("userData", JSON.stringify(user));
 
         // --- Show Confirmation of Changes ---
@@ -87,4 +181,4 @@ document.addEventListener("DOMContentLoaded", () => {
         saveStatus.classList.add("visible");
         setTimeout(() => saveStatus.classList.remove("visible"), 3000);
     });
-})
+});
