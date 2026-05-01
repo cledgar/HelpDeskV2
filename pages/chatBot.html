@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Basic Metadata -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/assets/images/favicon.png" />
+    <title>Help Desk - ChatBot</title>
+
+    <!-- Global and Component Stylesheets -->
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/chatBot.css" />
+
+    <!-- Font Awesome for Icons -->
+    <script
+      src="https://kit.fontawesome.com/d357d72767.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!-- Main Layout Container -->
+    <div class="app-container">
+      <!-- Sidebar Injection Point -->
+      <nav id="sidebar"></nav>
+
+      <!-- Main Content Area -->
+      <div class="main">
+        <!-- Topbar Injection Point -->
+        <div id="topbar"></div>
+
+        <!-- Page-Specific Content -->
+        <div class="content">
+          <div class="chat-wrapper">
+            <div class="chat-header">
+              <div class="bot-info">
+                <div class="bot-avatar">
+                  <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bot-details">
+                  <h3>Gemini Assistant</h3>
+                  <span><i class="fa-solid fa-circle"></i> Online</span>
+                </div>
+              </div>
+              <div class="chat-actions">
+                <button title="Clear Chat">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id="chat-messages" class="chat-messages">
+              <!-- Bot Message Example -->
+              <div class="message bot-message">
+                <div class="message-content">
+                  Hello! I'm your HelpDesk assistant powered by Gemini. How can
+                  I help you today?
+                </div>
+                <div class="message-time">10:00 AM</div>
+              </div>
+
+              <!-- User Message Example -->
+            </div>
+
+            <div class="chat-input-area">
+              <div class="input-container">
+                <button class="attachment-btn">
+                  <i class="fa-solid fa-paperclip"></i>
+                </button>
+                <input
+                  type="text"
+                  id="user-input"
+                  placeholder="Type your message here..."
+                  autocomplete="off"
+                />
+                <button id="send-btn" class="send-btn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frontend logic for components and chatbot -->
+    <script type="module" src="/js/supabase.js"></script>
+    <script type="module" src="/js/sidebar.js"></script>
+    <script type="module" src="/js/topbar.js"></script>
+    <script type="module" src="/js/chatBot.js"></script>
+  </body>
+</html>
