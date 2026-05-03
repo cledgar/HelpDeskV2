@@ -32,6 +32,8 @@ async function loadTicketStatus() {
 
         <div class="priority-box">Priority: <span class="priority-value">${ticket.priority}</span></div>
 
+        <div class="department-box">Department: <span class="department-value">${ticket.department}</span></div>
+
         <div class="description-box">
           <h4>Description</h4>
           <p>${ticket.description}</p>

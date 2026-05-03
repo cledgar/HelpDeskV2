@@ -13,12 +13,20 @@
   border-radius: 8px;
 }
 
+/* Toolbar */
+.ticket-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
 /* Sort Dropdown */
 .sort-dropdown {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
 }
 
 .sort-dropdown label {
@@ -36,6 +44,323 @@
   cursor: pointer;
   font-size: 0.9rem;
 }
+
+.filter-toggle-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.filter-toggle-btn:hover {
+  background-color: #1565c0;
+}
+
+.filter-popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.filter-popup.hidden {
+  display: none;
+}
+
+.filter-popup-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.filter-popup-panel {
+  position: relative;
+  z-index: 1;
+  width: min(560px, calc(100% - 40px));
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.filter-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.filter-popup-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #133e5e;
+}
+
+.close-filter-btn {
+  background: transparent;
+  border: none;
+  color: #133e5e;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Date Filter Controls */
+.filter-controls {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.filter-section {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #133e5e;
+}
+
+.filter-category {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  background: #f4f8ff;
+  border: 1px solid #dbe9ff;
+  border-radius: 10px;
+}
+
+.filter-category-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f3e72;
+}
+
+.date-filter-fields {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #dbe9ff;
+  border-radius: 10px;
+}
+
+.filter-item-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-item-btn {
+  background: #ffffff;
+  border: 1px solid #d1d9e6;
+  color: #133e5e;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.filter-item-btn:hover,
+.filter-item-btn.active {
+  background: #1976d2;
+  border-color: #1565c0;
+  color: #ffffff;
+}
+
+.filter-checkbox-list {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #133e5e;
+  font-size: 0.95rem;
+}
+
+.filter-checkbox-label input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.filter-checkbox-label:hover {
+  border-color: #1976d2;
+}
+
+.filter-fields {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #dbe9ff;
+  border-radius: 10px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  color: #133e5e;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: normal;
+}
+
+.filter-select,
+.filter-input {
+  background-color: #ffffff;
+  color: #133e5e;
+  border: 2px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  min-width: 120px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-input {
+  cursor: text;
+}
+
+.filter-action-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.filter-help {
+  padding: 14px;
+  background: #f7f9fd;
+  border: 1px solid #dbe9ff;
+  border-radius: 10px;
+  color: #33475b;
+  font-size: 0.95rem;
+}
+
+.filter-select:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.filter-select:hover:not(:disabled),
+.filter-input:hover:not(:disabled) {
+  border-color: #0066cc;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
+}
+
+.apply-filter-btn,
+.clear-filter-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.apply-filter-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.apply-filter-btn:hover:not(:disabled) {
+  background-color: #45a049;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.apply-filter-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.clear-filter-btn {
+  background-color: #666;
+  color: white;
+}
+
+.clear-filter-btn:hover:not(:disabled) {
+  background-color: #555;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.clear-filter-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.apply-filter-btn:disabled,
+.clear-filter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive filter controls for smaller screens */
+@media (max-width: 768px) {
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-select,
+  .filter-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .apply-filter-btn,
+  .clear-filter-btn {
+    width: 100%;
+  }
+}
+
+#tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 
 /* Individual Ticket Card Styling */
 .ticket-card {
@@ -82,21 +407,38 @@
 }
 
 /* Action Button for Deleting Tickets */
+.delete-ticket-btn,
+.status-btn,
+.apply-filter-btn,
+.clear-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  min-width: 90px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
 .delete-ticket-btn {
   background-color: #ff4444;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  align-self: flex-end;
   margin: auto 0 auto 0;
 }
 
 .delete-ticket-btn:hover {
   background-color: #ff3e00;
-  transition: background-color 0.3s ease;
+}
+
+.delete-ticket-btn:active,
+.status-btn:active,
+.apply-filter-btn:active,
+.clear-filter-btn:active {
+  transform: translateY(1px);
 }
 
 /* Actions container and Status button */
@@ -110,10 +452,6 @@
   background: #1976d2;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
 }
 .status-btn:hover {
   background: #1565c0;

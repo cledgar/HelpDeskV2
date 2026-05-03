@@ -44,9 +44,10 @@ export function initTicketForm() {
             const ticketTitle = document.querySelector("#ticket-title").value;
             const ticketDescription = document.querySelector("#ticket-description").value;
             const ticketPriority = document.querySelector("#ticket-priority").value;
+            const department = document.querySelector("#departments").value;
 
-            // Get current user information from session storage
-            const userData = JSON.parse(sessionStorage.getItem("userData"));
+            // Get current user information from local storage (set during login)
+            const userData = JSON.parse(localStorage.getItem("userData"));
             const createdBy = userData ? userData.username : "Guest";
 
             // Get current timestamp
@@ -59,7 +60,7 @@ export function initTicketForm() {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ ticketTitle, ticketDescription, ticketPriority, createdBy, createdAt })
+                    body: JSON.stringify({ ticketTitle, ticketDescription, ticketPriority, department, createdBy, createdAt })
                 });
 
                 const data = await response.json();
@@ -68,6 +69,7 @@ export function initTicketForm() {
                     console.log("Server says:", data.message);
                     // Dispatch custom event to notify other components that a new ticket was created
                     const ticketEvent = new CustomEvent("ticketCreated", {
+                        
                         detail: data.ticket
                     });
                     document.dispatchEvent(ticketEvent);

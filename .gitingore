@@ -1,0 +1,21 @@
+# Logs
+*.log
+
+# Dependency directories
+node_modules/
+/target/ # ignores only the target directory in the root folder
+
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating System generated files
+.DS_Store # macOS system files
+Thumbs.db # Windows system files
+
+# Exception: ignore all log files except "important.log"
+!important.log
+

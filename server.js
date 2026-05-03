@@ -26,6 +26,7 @@ ticketsDB.exec(`
         title TEXT NOT NULL,
         description TEXT NOT NULL,
         priority TEXT NOT NULL,
+        department TEXT NOT NULL DEFAULT 'General',
         status TEXT NOT NULL DEFAULT 'pending',
         createdBy TEXT NOT NULL,
         createdAt TEXT NOT NULL
@@ -35,6 +36,11 @@ ticketsDB.exec(`
 // Add createdAt column if it doesn't exist (for existing databases)
 try {
     ticketsDB.exec(`ALTER TABLE tickets ADD COLUMN createdAt TEXT`);
+} catch (error) {
+    // Column might already exist, ignore error
+}
+try {
+    ticketsDB.exec(`ALTER TABLE tickets ADD COLUMN department TEXT NOT NULL DEFAULT 'General'`);
 } catch (error) {
     // Column might already exist, ignore error
 }
@@ -145,34 +151,36 @@ app.post("/login", (req, res) => {
  * @param {string} req.body.ticketTitle
  * @param {string} req.body.ticketDescription
  * @param {string} req.body.ticketPriority
+ * @param {string} req.body.department
  * @param {string} req.body.createdBy
  * @param {string} req.body.createdAt
  */
 app.post("/createTicket", (req, res) => {
     console.log("Server-Side ticket data:", req.body);
 
-    const { ticketTitle, ticketDescription, ticketPriority, createdBy, createdAt } = req.body;
+    const { ticketTitle, ticketDescription, ticketPriority, department, createdBy, createdAt } = req.body;
 
-    if (ticketTitle && ticketDescription && ticketPriority) {
+    if (ticketTitle && ticketDescription && ticketPriority && department) {
         try {
             const insertTicket = ticketsDB.prepare(`
-                INSERT INTO tickets (title, description, priority, status, createdBy, createdAt)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO tickets (title, description, priority, department, status, createdBy, createdAt)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             `);
 
             const newTicket = {
                 title: ticketTitle,
                 description: ticketDescription,
                 priority: ticketPriority,
+                department: department,
                 status: "pending",
                 createdBy: createdBy,
                 createdAt: createdAt
             };
 
-            insertTicket.run(newTicket.title, newTicket.description, newTicket.priority, newTicket.status, newTicket.createdBy, newTicket.createdAt);
+            const result = insertTicket.run(newTicket.title, newTicket.description, newTicket.priority, newTicket.department, newTicket.status, newTicket.createdBy, newTicket.createdAt);
             console.log("Ticket saved to database.");
 
-            res.json({ success: true, message: "Ticket created successfully", ticket: newTicket });
+            res.json({ success: true, message: "Ticket created successfully", ticket: { id: result.lastInsertRowid, ...newTicket } });
         } catch (error) {
             console.error("Error creating ticket:", error);
             res.status(500).json({ success: false, message: "Error creating ticket" });
