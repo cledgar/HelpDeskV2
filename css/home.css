@@ -1,0 +1,155 @@
+/* Main Landing Section */
+.landing {
+    height: 1100px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.landing-badge {
+    display: inline-block;
+    background: #e8f0f7;
+    color: #133e5e;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.3rem 0.9rem;
+    border-radius: 2rem;
+    letter-spacing: 0.04rem;
+}
+
+.landing-title {
+    align-items: top;
+    margin-top: 1rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: #133e5e;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+}
+
+.landing-accent {
+    color: #2c70a2;
+}
+
+.landing-inner {
+    text-align: center;
+    max-width: 600px;
+}
+
+.landing-subtitle {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 2rem;
+    max-width: 100%;
+}
+
+.landing-btns {
+    margin-top: 12rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.landing-btn {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.landing-btn.primary {
+    background: #133e5e;
+    color: #fff;
+}
+
+.landing-btn.primary:hover {
+    color: #133e5e;
+    background-color: rgba(44, 112, 162, 0.7);
+}
+
+.landing-btn.secondary {
+    background: #fff;
+    color: #133e5e;
+    border: 1px solid #d1d5db;
+}
+
+.landing-btn.secondary:hover {
+    border-color: #133e5e;
+    color: #fff;
+    background-color: rgba(44, 112, 162, 0.7);
+}
+
+/* CTA Section */
+.cta {
+    padding: 5rem 2rem;
+    background: #133e5e;
+}
+
+.cta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.cta p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+.cta-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.cta-btn.primary {
+    background: #0e2d45;
+    color: #fff;
+    border: .5px solid #133e5e;
+}
+
+.cta-btn.primary:hover {
+    color: #fff;
+    background-color: rgba(44, 112, 162, 0.7);
+    border: .5px solid #d1d5db;
+}
+
+.cta-btn.secondary {
+    background: #fff;
+    color: #133e5e;
+    border: .5px solid #d1d5db;
+}
+
+.cta-btn.secondary:hover {
+    color: #fff;
+    background-color: rgba(44, 112, 162, 0.7);
+    border: .5px solid #d1d5db;
+}

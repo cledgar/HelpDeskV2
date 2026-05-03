@@ -44,15 +44,16 @@ body {
 .nav-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     color: #fff;
-    font-size: 1.1rem;
-    font-weight: 500;
 }
 
 .nav-logo-img {
-    height: 32px;
+    height: 64px;
     width: auto;
+    object-fit: contain;
+    transform: scale(2);
+    max-height: 40px
 }
 
 .nav-links {
@@ -105,6 +106,7 @@ body {
 }
 
 .text-field {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -147,11 +149,11 @@ body {
 }
 
 #login-form label {
-    margin-bottom: 3px;
+    margin-bottom: 1px;
 }
 
 #login-form input {
-    margin-bottom: 10px;
+    margin-bottom: 1px;
 }
 
 #login-form button {
@@ -217,15 +219,4 @@ input:focus {
     font-weight: bold;
     font-family: inherit;
     color: #94a3b8;
-}
-
-/* Landing Pages Only - force footer to bottom */
-body.landing-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-body.landing-page main {
-    flex: 1;
 }

@@ -70,13 +70,6 @@
     transform: rotate(180deg);
 }
 
-/* Landing Pages Only - force footer to bottom */
-body.landing-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
 body.landing-page main {
     flex: 1;
 }

@@ -33,3 +33,24 @@ body {
     box-sizing: border-box;
     padding: 16px;
 }
+
+.admin-only,
+.employee-only,
+.client-only {
+    display: none;
+}
+
+body.role-admin .admin-only,
+body.role-admin .employee-only,
+body.role-admin .client-only {
+    display: block;
+}
+
+body.role-employee .employee-only,
+body.role-employee .client-only {
+    display: block;
+}
+
+body.role-client .client-only {
+    display: block;
+}

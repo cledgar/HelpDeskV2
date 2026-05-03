@@ -7,9 +7,33 @@ import { supabase } from "/js/supabase.js";
 
 const registrationForm = document.getElementById("register-form");
 const passwordInput = document.getElementById("password");
-const login = document.getElementById("login-button");
+const confirmInput = document.getElementById("confirm-password");
+const requirementsBox = document.getElementById("password-requirements");
 
-/** Password Requirement Check */
+// Force hide
+requirementsBox.style.display = "none";
+
+/** Show/hide requirements box */
+function allRequirementsMet() {
+    const val = passwordInput.value;
+    return (
+        val.length>=8 &&
+        /[A-Z]/.test(val) &&
+        /[a-z]/.test(val) &&
+        /[0-9]/.test(val) &&
+        /[^A-Za-z0-9]/.test(val)
+    );
+}
+
+function updateRequirements() {
+    const val = passwordInput.value;
+    toggleReq("req-length", val.length >= 8);
+    toggleReq("req-upper", /[A-Z]/.test(val));
+    toggleReq("req-lower", /[a-z]/.test(val));
+    toggleReq("req-number", /[0-9]/.test(val));
+    toggleReq("req-special", /[^A-Za-z0-9]/.test(val));
+}
+
 function toggleReq(id, met) {
     const el = document.getElementById(id);
     if (met) {
@@ -19,16 +43,39 @@ function toggleReq(id, met) {
     }
 }
 
-passwordInput.addEventListener("input", () => {
-    const val = passwordInput.value;
+let passwordFocused = false;
+let confirmPwFocused = false;
 
-    toggleReq("req-length", val.length >= 8);
-    toggleReq("req-upper", /[A-Z]/.test(val));
-    toggleReq("req-lower", /[a-z]/.test(val));
-    toggleReq("req-number", /[0-9]/.test(val));
-    toggleReq("req-special", /[^A-Za-z0-9]/.test(val));
+// Show when field is focused, hide when met or focus leaves
+passwordInput.addEventListener("focus", () => {
+    passwordFocused = true;
+    if (!allRequirementsMet()) requirementsBox.style.display = "block";
 });
 
+passwordInput.addEventListener("blur", () => {
+    passwordFocused = false;
+    if (!confirmPwFocused) requirementsBox.style.display = "none";
+})
+
+passwordInput.addEventListener("input", () => {
+    updateRequirements();
+    if (allRequirementsMet()) {
+        requirementsBox.style.display = "none";
+    } else if (passwordFocused) {
+        requirementsBox.style.display = "block";
+    }
+
+});
+
+confirmInput.addEventListener("focus", () => {
+    confirmPwFocused = true;
+    if (!allRequirementsMet()) requirementsBox.style.display = "block";
+});
+
+confirmInput.addEventListener("blur", () => {
+    confirmPwFocused = false;
+    if (!passwordFocused) requirementsBox.style.display = "none";
+});
 
 /**
  * Handle registration form submission.
@@ -44,6 +91,12 @@ registrationForm.addEventListener("submit", async (event) => {
     const confirmPassword = document.getElementById("confirm-password").value;
     const errorMsg = document.getElementById("error-msg");
 
+    if (!allRequirementsMet()) {
+        errorMsg.textContent = "Not all password requirements met.";
+        errorMsg.style.display = "block";
+        requirementsBox.style.display = "block";
+        return;
+    }
 
     if (password !== confirmPassword) {
         errorMsg.textContent = "Passwords do not match";
@@ -85,8 +138,4 @@ registrationForm.addEventListener("submit", async (event) => {
     console.log("Registration successful!");
     window.location.href = "/pages/login-page.html";
 
-});
-
-login.addEventListener("click", () => {
-    window.location.href = "/pages/user-registration.html";
 });

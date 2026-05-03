@@ -1,6 +1,6 @@
 /**
  * @file footer.js
- * @description Loads the footer componenet onto the page
+ * @description Loads the footer component onto the page
  */
 
 import { loadComponent } from "./utils.js";
