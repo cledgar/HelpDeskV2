@@ -1,11 +1,12 @@
 /**
- * @file tickets-template.js
- * @description Manages fetching, rendering, and deleting support tickets on the dashboard.
+ * @file ticket-page.js
+ * @description Manages displaying tickets assigned to the current user on the ticket page.
  */
 
 import { PriorityFilter, DateFilter } from '/js/tag-filtering.js';
 
-let tickets = [];
+let assignedTickets = [];
+let closedTickets = [];
 let currentSort = 'priority'; // 'priority', 'oldest', 'newest'
 let filterMode = 'none'; // 'none', 'month-year', 'year', 'date-range'
 let selectedYear = null;
@@ -16,40 +17,54 @@ let selectedStatuses = new Set();
 let selectedPriorities = new Set();
 let selectedDepartments = new Set();
 let renderTimeout = null; // Debounce for filter renders
-let users = []; // Store available users for assignment
 
 /**
- * Fetches all tickets from the server and updates the UI.
+ * Fetches tickets assigned to the current user.
  */
-async function fetchTickets() {
+async function fetchAssignedTickets() {
   try {
+    // Get current user
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (!userData) {
+      console.error("No user data found");
+      return;
+    }
+
     const response = await fetch("/getTickets");
     if (response.ok) {
       const allTickets = await response.json();
-      // Filter out closed tickets for the dashboard
-      tickets = allTickets.filter(ticket => ticket.status !== 'closed');
-      if (document.getElementById("tickets-list")) {
-        renderTicketCards(tickets);
-      } else {
-        renderTickets(tickets);
-      }
+      // Filter tickets assigned to current user and exclude closed tickets
+      assignedTickets = allTickets.filter(
+        (ticket) => ticket.assignedTo === userData.username && ticket.status !== 'closed'
+      );
+      renderAssignedTickets(assignedTickets);
     }
   } catch (error) {
-    console.error("Error fetching tickets:", error);
+    console.error("Error fetching assigned tickets:", error);
   }
 }
 
 /**
- * Fetches all users from the server for assignment purposes.
+ * Fetches closed tickets for the current user.
  */
-async function fetchUsers() {
+async function fetchClosedTickets() {
   try {
-    const response = await fetch("/getUsers");
+    // Get current user
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (!userData) {
+      console.error("No user data found");
+      return;
+    }
+
+    const response = await fetch("/getTickets");
     if (response.ok) {
-      users = await response.json();
+      const allTickets = await response.json();
+      // Filter closed tickets assigned to current user
+      closedTickets = allTickets.filter(ticket => ticket.assignedTo === userData.username && ticket.status === 'closed');
+      renderClosedTickets();
     }
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching closed tickets:", error);
   }
 }
 
@@ -244,62 +259,16 @@ function renderFilterControls(tickets) {
 }
 
 /**
- * Renders only the ticket cards (without re-rendering filters)
+ * Renders the assigned tickets.
  * @param {Array} tickets - Array of ticket objects to display.
  */
-function renderTicketCards(tickets) {
-  const container = document.getElementById("ticket-container");
-  const ticketsContainer = document.getElementById("tickets-list");
-
-  // Apply all active filters
-  let filteredTickets = applyFilters(tickets);
-
-  // Display message if no tickets are found after filtering
-  if (filteredTickets.length === 0) {
-    ticketsContainer.innerHTML = `<p class="no-tickets">No Pending Tickets</p>`;
-    return;
-  }
-
-  // Sort the tickets
-  const sortedTickets = sortTickets(filteredTickets);
-
-  ticketsContainer.innerHTML = sortedTickets
-    .map(
-      (ticket) => `
-  <div class="ticket-card" data-priority="${ticket.priority}">
-      <div>
-          <h3>#${ticket.id} - ${ticket.title}</h3>
-          <p>Description: ${ticket.description}</p>
-          <p data-priority="${ticket.priority}">Priority: ${ticket.priority}</p>
-          <p>Department: ${ticket.department}</p>
-          <p>Status: ${ticket.status}</p>
-          <p><strong>Created By: ${ticket.createdBy}</strong></p>
-          <p><strong>Assigned To: ${ticket.assignedTo || 'Unassigned'}</strong></p>
-          <p>Created At: ${new Date(ticket.createdAt).toLocaleString()}</p>
-      </div>
-      <div class="ticket-actions">
-          <button class="assign-btn" data-id="${ticket.id}">Assign</button>
-          <button class="status-btn" data-id="${ticket.id}">Status</button>
-          <button class="delete-ticket-btn" data-id="${ticket.id}" id="delete-ticket-button">Delete</button>
-      </div>
-  </div>
-  `,
-    )
-    .join("");
-}
-
-/**
- * Renders the complete tickets section with filters and cards.
- * Separates filter rendering from ticket rendering for better responsiveness.
- * @param {Array} tickets - Array of ticket objects to display.
- */
-function renderTickets(tickets) {
+function renderAssignedTickets(tickets) {
   const container = document.getElementById("ticket-container");
 
   // Only render full structure on first call or when container structure needs updating
   if (!document.getElementById("tickets-list")) {
     container.innerHTML = `
-      <h1 class="ticket-title">Tickets</h1>
+      <h1 class="ticket-title">My Assigned Tickets</h1>
       <div class="ticket-toolbar">
         <div class="sort-dropdown">
           <label for="sort-select">Sort by:</label>
@@ -330,74 +299,131 @@ function renderTickets(tickets) {
 }
 
 /**
- * Shows a modal for assigning a ticket to a user.
- * @param {number} ticketId - The ID of the ticket to assign.
+ * Renders only the ticket cards (without re-rendering filters)
+ * @param {Array} tickets - Array of ticket objects to display.
  */
-function showAssignmentModal(ticketId) {
-  // Create modal HTML
-  const modalHTML = `
-    <div id="assignment-modal" class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
-      <div class="modal" style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
-        <h3>Assign Ticket #${ticketId}</h3>
-        <form id="assignment-form">
-          <label for="assign-user-select">Assign to:</label>
-          <select id="assign-user-select" required>
-            <option value="">Select User</option>
-            ${users.map(user => `<option value="${user.username}">${user.username}</option>`).join('')}
-          </select>
-          <div style="margin-top: 20px; display: flex; gap: 10px;">
-            <button type="submit" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Assign</button>
-            <button type="button" id="cancel-assignment" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-          </div>
-        </form>
+function renderTicketCards(tickets) {
+  const ticketsContainer = document.getElementById("tickets-list");
+
+  // Apply all active filters
+  let filteredTickets = applyFilters(tickets);
+
+  // Display message if no tickets are found after filtering
+  if (filteredTickets.length === 0) {
+    ticketsContainer.innerHTML = `<p class="no-tickets">No Assigned Tickets</p>`;
+    return;
+  }
+
+  // Sort the tickets
+  const sortedTickets = sortTickets(filteredTickets);
+
+  ticketsContainer.innerHTML = sortedTickets
+    .map(
+      (ticket) => `
+  <div class="ticket-card" data-priority="${ticket.priority}">
+      <div>
+          <h3>#${ticket.id} - ${ticket.title}</h3>
+          <p>Description: ${ticket.description}</p>
+          <p data-priority="${ticket.priority}">Priority: ${ticket.priority}</p>
+          <p>Department: ${ticket.department}</p>
+          <p>Status: ${ticket.status}</p>
+          <p><strong>Created By: ${ticket.createdBy}</strong></p>
+          <p>Created At: ${new Date(ticket.createdAt).toLocaleString()}</p>
       </div>
-    </div>
-  `;
-
-  // Add modal to body
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-  // Handle form submission
-  document.getElementById('assignment-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const assignedTo = document.getElementById('assign-user-select').value;
-    
-    try {
-      const response = await fetch(`/updateTicket/${ticketId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ assignedTo })
-      });
-
-      if (response.ok) {
-        // Update the ticket in local array
-        const ticket = tickets.find(t => t.id === ticketId);
-        if (ticket) {
-          ticket.assignedTo = assignedTo;
-          renderTicketCards(tickets);
-        }
-      } else {
-        console.error('Failed to assign ticket');
-      }
-    } catch (error) {
-      console.error('Error assigning ticket:', error);
-    }
-
-    // Remove modal
-    document.getElementById('assignment-modal').remove();
-  });
-
-  // Handle cancel
-  document.getElementById('cancel-assignment').addEventListener('click', () => {
-    document.getElementById('assignment-modal').remove();
-  });
+      <div class="ticket-actions">
+          <button class="close-ticket-btn status-btn" data-id="${ticket.id}">Close Ticket</button>
+          <button class="status-btn" data-id="${ticket.id}">Status</button>
+      </div>
+  </div>
+  `,
+    )
+    .join("");
 }
 
 /**
- * Event delegation for ticket deletion, sort dropdown, and date filters.
- * Listens for clicks on delete buttons and changes on dropdowns/inputs within the ticket container.
+ * Closes a ticket by updating its status to 'closed'.
+ * @param {number} ticketId - The ID of the ticket to close.
+ */
+async function closeTicket(ticketId) {
+  console.log('closeTicket called with ticketId:', ticketId);
+  try {
+    console.log('Making fetch request to:', `/closeTicket/${ticketId}`);
+    const response = await fetch(`/closeTicket/${ticketId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+
+    if (response.ok) {
+      // Remove the ticket from the local array and re-render
+      assignedTickets = assignedTickets.filter(ticket => ticket.id !== ticketId);
+      renderAssignedTickets(assignedTickets);
+      // Refresh closed tickets from server to show the newly closed ticket
+      fetchClosedTickets();
+    } else {
+      console.error('Failed to close ticket');
+      alert('Failed to close ticket. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error closing ticket:', error);
+    alert('Error closing ticket. Please try again.');
+  }
+}
+
+/**
+ * Renders the closed tickets history section.
+ */
+function renderClosedTickets() {
+  const container = document.getElementById("ticket-container");
+
+  // Check if closed tickets section already exists
+  let closedSection = document.getElementById("closed-tickets-section");
+  if (!closedSection) {
+    closedSection = document.createElement("div");
+    closedSection.id = "closed-tickets-section";
+    closedSection.className = "closed-tickets-section";
+    container.appendChild(closedSection);
+  }
+
+  if (closedTickets.length === 0) {
+    closedSection.innerHTML = `
+      <h2>Closed Tickets History</h2>
+      <p class="no-tickets">No closed tickets yet.</p>
+    `;
+    return;
+  }
+
+  closedSection.innerHTML = `
+    <h2>Closed Tickets History</h2>
+    <div class="closed-tickets-list">
+      ${closedTickets
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by newest first
+        .map(
+          (ticket) => `
+      <div class="closed-ticket-card">
+        <div class="closed-ticket-header">
+          <h3>#${ticket.id} - ${ticket.title}</h3>
+          <span class="closed-date">Closed: ${new Date(ticket.createdAt).toLocaleString()}</span>
+        </div>
+        <div class="closed-ticket-details">
+          <p><strong>Description:</strong> ${ticket.description}</p>
+          <p><strong>Priority:</strong> ${ticket.priority}</p>
+          <p><strong>Department:</strong> ${ticket.department}</p>
+          <p><strong>Created By:</strong> ${ticket.createdBy}</p>
+        </div>
+      </div>
+      `,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+/**
+ * Event delegation for ticket actions, sort dropdown, and date filters.
  */
 document
   .getElementById("ticket-container")
@@ -405,7 +431,7 @@ document
     // Handle sort dropdown change - immediate render
     if (event.target.id === 'sort-select') {
       currentSort = event.target.value;
-      renderTicketCards(tickets);
+      renderTicketCards(assignedTickets);
       return;
     }
 
@@ -413,7 +439,7 @@ document
     if (event.target.id === 'year-select') {
       selectedYear = event.target.value ? parseInt(event.target.value) : null;
       selectedMonth = null; // Reset month when year changes
-      renderFilterControls(tickets); // Update filters first (for month dropdown)
+      renderFilterControls(assignedTickets); // Update filters first (for month dropdown)
       debouncedRender(); // Then update tickets with debounce
       return;
     }
@@ -450,8 +476,8 @@ document
       if (type === 'department') {
         if (event.target.checked) selectedDepartments.add(value);
         else selectedDepartments.delete(value);
-      return;
       }
+      return;
     }
   });
 
@@ -474,7 +500,7 @@ document
       }
 
       if (valid) {
-        renderTicketCards(tickets);
+        renderTicketCards(assignedTickets);
         const popup = document.getElementById('filter-popup');
         if (popup) popup.classList.add('hidden');
       }
@@ -490,7 +516,7 @@ document
         selectedMonth = null;
         dateRangeStart = null;
         dateRangeEnd = null;
-        renderFilterControls(tickets);
+        renderFilterControls(assignedTickets);
       }
       return;
     }
@@ -505,7 +531,7 @@ document
       selectedStatuses.clear();
       selectedPriorities.clear();
       selectedDepartments.clear();
-      renderTickets(tickets); // Full render to reset all controls
+      renderAssignedTickets(assignedTickets); // Full render to reset all controls
       return;
     }
 
@@ -523,10 +549,12 @@ document
       return;
     }
 
-    // Handle assign button click
-    if (event.target.classList.contains("assign-btn")) {
+    // Handle close ticket button
+    if (event.target.classList.contains("close-ticket-btn")) {
       const ticketId = parseInt(event.target.getAttribute("data-id"));
-      showAssignmentModal(ticketId);
+      if (confirm("Are you sure you want to close this ticket?")) {
+        closeTicket(ticketId);
+      }
       return;
     }
 
@@ -536,58 +564,22 @@ document
       window.location.href = `/pages/status-page.html?ticketId=${ticketId}`;
       return;
     }
-
-    // Check if the clicked element is a delete button
-    if (event.target.classList.contains("delete-ticket-btn")) {
-      const ticketId = parseInt(event.target.getAttribute("data-id"));
-
-      // Optimistically remove the ticket from the local array
-      tickets = tickets.filter((t) => t.id !== ticketId);
-
-      try {
-        // Send delete request to the server
-        const response = await fetch(`/deleteTicket/${ticketId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const result = await response.json();
-        console.log(result.message);
-      } catch (error) {
-        console.error("Error deleting ticket:", error);
-      }
-
-      // Re-render the tickets to reflect changes
-      renderTicketCards(tickets);
-    }
   });
 
 /**
- * Listen for the custom 'ticketCreated' event to add newly created tickets to the list.
+ * Initialize assigned tickets on page load.
  */
-document.addEventListener("ticketCreated", (event) => {
-  const newTicket = event.detail;
-
-  if (newTicket) {
-    tickets.push(newTicket);
-    renderTickets(tickets);
-  }
-});
-
-/**
- * Initialize tickets on page load.
- */
-document.addEventListener("DOMContentLoaded", async () => {
-  await fetchUsers();
-  fetchTickets().catch((error) => {
-    console.error("Failed to initialize tickets:", error);
+document.addEventListener("DOMContentLoaded", () => {
+  fetchAssignedTickets().catch((error) => {
+    console.error("Failed to initialize assigned tickets:", error);
+  });
+  fetchClosedTickets().catch((error) => {
+    console.error("Failed to initialize closed tickets:", error);
   });
 });
-
-// Initial render
-renderTickets(tickets);
 
 // Set up polling to keep tickets synchronized with the server every 2 seconds
-setInterval(fetchTickets, 2000);
+setInterval(() => {
+  fetchAssignedTickets();
+  fetchClosedTickets();
+}, 2000);
