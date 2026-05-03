@@ -104,6 +104,30 @@ registrationForm.addEventListener("submit", async (event) => {
         return;
     }
 
+    const { data: existingUsername } = await supabase
+        .from("users")
+        .select("username")
+        .ilike("username", username)
+        .single();
+    
+    if (existingUsername) {
+        errorMsg.textContent = "That username is already taken.";
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    const { data: existingEmail } = await supabase
+        .from("users")
+        .select("email")
+        .ilike("email", email)
+        .single();
+    
+    if (existingEmail) {
+        errorMsg.textContent = "That email is already registered.";
+        errorMsg.style.display = "block";
+        return;
+    }
+
     // Create Authorized Account
     const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -130,7 +154,19 @@ registrationForm.addEventListener("submit", async (event) => {
         }]);
 
     if (profileError) {
-        errorMsg.textContent = "Registration failed. Please try again.";
+        console.error("Profile error:", profileError);
+
+        if (profileError.code === "23505") {
+            if (profileError.message.includes("username")) {
+                errorMsg.textContent = "That username is already taken.";
+            } else if (profileError.message.includes("email")) {
+                errorMsg.textContent = "That email is already registered.";
+            } else {
+                errorMsg.textContent = "An account with those details already exists.";
+            }
+        } else {
+            errorMsg.textContent = "Registration failed. Please try again.";
+        }
         errorMsg.style.display = "block";
         return;
     }

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             emailInput.value = user.email || "";
             firstNameInput.value = user.firstname || "";
             lastNameInput.value = user.lastname || "";
-            phoneNumberInput.value=user.phonenumber || "";
+            phoneNumberInput.value=user.phone || "";
 
             // --- Load Profile Picture if saved ---
             if (user.profilePic_url) {
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 email: emailInput.value.trim(),
                 firstname: firstNameInput.value.trim(),
                 lastname: lastNameInput.value.trim(),
-                phonenumber: phoneNumberInput.value.trim(),
+                phone: phoneNumberInput.value.trim(),
                 pronouns: document.getElementById("pronouns").value
             })
             .eq("id", user.id);
