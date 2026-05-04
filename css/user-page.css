@@ -4,6 +4,11 @@
 * Styles for the user management page.
 */
 
+/* Match settings page padding */
+.content {
+    padding: 2rem;
+}
+
 /* Page Header */
 .page-header {
     display: flex;
@@ -16,15 +21,16 @@
 }
 
 .page-title h1 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     color: #133e5e;
     margin: 0 0 0.25rem 0;
 }
 
 .page-title p {
     color: #888;
-    font-size: 0.865rem;
+    font-size: 0.95rem;
     margin: 0;
+    margin-bottom: 1rem;
 }
 
 /* View Toggle */
