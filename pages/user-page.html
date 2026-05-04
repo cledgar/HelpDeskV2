@@ -11,25 +11,104 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/sidebar.css">
     <link rel="stylesheet" href="/css/topbar.css">
+    <link rel="stylesheet" href="/css/user-page.css">
 
     <!-- Font Awesome for Icons -->
     <script src="https://kit.fontawesome.com/d357d72767.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
     <!-- Main Layout Container -->
     <div class="app-container">
+
         <!-- Sidebar Injection Point -->
         <nav id="sidebar"></nav>
 
         <!-- Main Content Area -->
         <div class="main">
+
             <!-- Topbar Injection Point -->
             <div id="topbar"></div>
 
             <!-- Page-Specific Content -->
             <div class="content">
-                <!-- Placeholder for User Management Content -->
-                User Page Content
+
+                <!-- User Management Page Header -->
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Users</h1>
+                        <p>Manage and view all users in the system</p>
+                    </div>
+                    <div class="page-actions">
+
+                        <!-- View Toggle -->
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="table-view-btn" title="Table View">
+                                <i class="fa-solid fa-table-list"></i>
+                            </button>
+                            <button class="view-btn" id="grid-view-btn" title="Grid View">
+                                <i class="fa-solid fa-grip"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">
+                        All <span class="tab-count" id="count-all">0</span>
+                    </button>
+                    <button class="filter-tab" data-filter="client">
+                        Clients <span class="tab-count" id="count-client">0</span>
+                    </button>
+                    <button class="filter-tab" data-filter="employee">
+                        Employees <span class="tab-count" id="count-employee">0</span>
+                    </button>
+                    <button class="filter-tab" data-filter="admin">
+                        Admins <span class="tab-count" id="count-admin">0</span>
+                    </button>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="user-search" placeholder="Search by name, username or email...">
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" class="loading-state">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Loading users...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state" style="display:none;">
+                    <i class="fa-solid fa-users-slash"></i>
+                    <p>No users found</p>
+                </div>
+
+                <!-- Table View -->
+                <div id="table-view" class="table-view" style="display:none;">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th class="admin-only">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Grid View -->
+                <div id="grid-view" style="display:none;">
+                    <div class="users-grid" id="grid-body"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -37,5 +116,6 @@
     <!-- Frontend logic for components -->
     <script type="module" src="/js/sidebar.js"></script>
     <script type="module" src="/js/topbar.js"></script>
+    <script type="module" src="/js/user-page.js"></script>
 </body>
 </html>
