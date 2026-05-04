@@ -5,16 +5,17 @@
  */
 
 import express from "express";
-import cors from "cors";
 import morgan from "morgan";
 import Database from "better-sqlite3";
 import { createClient } from "@supabase/supabase-js";
+import cors from "cors";
 
 const app = express();
 const PORT = 8000;
 
 const SUPABASE_URL = "https://adnjlrxbqgerjlhgirlq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_sNNSlaz28kpULCpWkBCM3Q_OY6FN8cv";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Initialize databases
 // tickets.db stores support ticket information
@@ -119,6 +120,71 @@ app.post("/registerUser", (req, res) => {
         }
 
         // Handle other internal server errors
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+/**
+ * POST /login
+ * Authenticates a user based on username and password.
+ * @param {string} req.body.username
+ * @param {string} req.body.password
+ */
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: "Username and password are required" });
+    }
+
+    try {
+        let email = username;
+
+        // Finds email by username
+        if (!username.includes("@")) {
+            const { data: users, error: lookupError } = await supabase
+                .from("users")
+                .select("email")
+                .ilike("username", username);
+
+            if (lookupError || !users || users.length === 0) {
+                return res.status(401).json({ success: false, message: "Username not found." });
+            }
+
+            email = users[0].email;
+        }
+
+        // Sign in with Supabase Auth
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+
+        // No matching user found
+        if (error) {
+            return res.status(401).json({ success: false, message: "Invalid username or password" });
+        }
+
+        // Look for user within database with matching username and password
+        const { data: profile, error: profileError } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", data.user.id)
+            .single();
+
+        if (profileError || !profile) {
+            return res.status(401).json({ success: false, message: "Could not load user profile. Please try again." });
+        }
+
+        // User found - return user data
+        res.json({
+            success: true,
+            message: `Logged in as ${profile.role || 'user'}`,
+            user: profile
+        });
+    } catch (error) {
+        console.error("Login error:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });

@@ -43,9 +43,11 @@
 }
  /* Logo Image */
 .sidebar-logo {
-    font-weight: 600;
-    width: 140%;
-    height: auto;
+    position: relative;
+    top: - 30px;
+    height: clamp(70px, 5vw, 90px);
+    width: auto;
+    object-fit: contain;
 }
 
 /* Highlight Active Link */

@@ -3,7 +3,7 @@
  * @description Manages fetching, rendering, and deleting support tickets on the dashboard.
  */
 
-import { PriorityFilter, DateFilter } from './tag-filtering.js';
+import { PriorityFilter, DateFilter } from '/js/tag-filtering.js';
 
 let tickets = [];
 let currentSort = 'priority'; // 'priority', 'oldest', 'newest'
@@ -16,6 +16,7 @@ let selectedStatuses = new Set();
 let selectedPriorities = new Set();
 let selectedDepartments = new Set();
 let renderTimeout = null; // Debounce for filter renders
+let users = []; // Store available users for assignment
 
 /**
  * Fetches all tickets from the server and updates the UI.
@@ -24,7 +25,9 @@ async function fetchTickets() {
   try {
     const response = await fetch("/getTickets");
     if (response.ok) {
-      tickets = await response.json();
+      const allTickets = await response.json();
+      // Filter out closed tickets for the dashboard
+      tickets = allTickets.filter(ticket => ticket.status !== 'closed');
       if (document.getElementById("tickets-list")) {
         renderTicketCards(tickets);
       } else {
@@ -33,6 +36,20 @@ async function fetchTickets() {
     }
   } catch (error) {
     console.error("Error fetching tickets:", error);
+  }
+}
+
+/**
+ * Fetches all users from the server for assignment purposes.
+ */
+async function fetchUsers() {
+  try {
+    const response = await fetch("/getUsers");
+    if (response.ok) {
+      users = await response.json();
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error);
   }
 }
 
@@ -257,9 +274,11 @@ function renderTicketCards(tickets) {
           <p>Department: ${ticket.department}</p>
           <p>Status: ${ticket.status}</p>
           <p><strong>Created By: ${ticket.createdBy}</strong></p>
+          <p><strong>Assigned To: ${ticket.assignedTo || 'Unassigned'}</strong></p>
           <p>Created At: ${new Date(ticket.createdAt).toLocaleString()}</p>
       </div>
       <div class="ticket-actions">
+          <button class="assign-btn" data-id="${ticket.id}">Assign</button>
           <button class="status-btn" data-id="${ticket.id}">Status</button>
           <button class="delete-ticket-btn" data-id="${ticket.id}" id="delete-ticket-button">Delete</button>
       </div>
@@ -311,17 +330,69 @@ function renderTickets(tickets) {
 }
 
 /**
- * Debounced function to update ticket display
- * Prevents rapid re-renders by debouncing filter changes
+ * Shows a modal for assigning a ticket to a user.
+ * @param {number} ticketId - The ID of the ticket to assign.
  */
-function debouncedRender() {
-  if (renderTimeout) {
-    clearTimeout(renderTimeout);
-  }
-  renderTimeout = setTimeout(() => {
-    renderTicketCards(tickets);
-    renderTimeout = null;
-  }, 100); // 100ms debounce
+function showAssignmentModal(ticketId) {
+  // Create modal HTML
+  const modalHTML = `
+    <div id="assignment-modal" class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+      <div class="modal" style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+        <h3>Assign Ticket #${ticketId}</h3>
+        <form id="assignment-form">
+          <label for="assign-user-select">Assign to:</label>
+          <select id="assign-user-select" required>
+            <option value="">Select User</option>
+            ${users.map(user => `<option value="${user.username}">${user.username}</option>`).join('')}
+          </select>
+          <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button type="submit" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Assign</button>
+            <button type="button" id="cancel-assignment" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  // Add modal to body
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  // Handle form submission
+  document.getElementById('assignment-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const assignedTo = document.getElementById('assign-user-select').value;
+    
+    try {
+      const response = await fetch(`/updateTicket/${ticketId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ assignedTo })
+      });
+
+      if (response.ok) {
+        // Update the ticket in local array
+        const ticket = tickets.find(t => t.id === ticketId);
+        if (ticket) {
+          ticket.assignedTo = assignedTo;
+          renderTicketCards(tickets);
+        }
+      } else {
+        console.error('Failed to assign ticket');
+      }
+    } catch (error) {
+      console.error('Error assigning ticket:', error);
+    }
+
+    // Remove modal
+    document.getElementById('assignment-modal').remove();
+  });
+
+  // Handle cancel
+  document.getElementById('cancel-assignment').addEventListener('click', () => {
+    document.getElementById('assignment-modal').remove();
+  });
 }
 
 /**
@@ -452,6 +523,13 @@ document
       return;
     }
 
+    // Handle assign button click
+    if (event.target.classList.contains("assign-btn")) {
+      const ticketId = parseInt(event.target.getAttribute("data-id"));
+      showAssignmentModal(ticketId);
+      return;
+    }
+
     // Navigate to status page when Status button clicked
     if (event.target.classList.contains("status-btn")) {
       const ticketId = parseInt(event.target.getAttribute("data-id"));
@@ -501,7 +579,8 @@ document.addEventListener("ticketCreated", (event) => {
 /**
  * Initialize tickets on page load.
  */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchUsers();
   fetchTickets().catch((error) => {
     console.error("Failed to initialize tickets:", error);
   });

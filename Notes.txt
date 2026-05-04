@@ -1,35 +1,22 @@
 I just wanted a section where I could write down important information or comments. - ZBB
 
 
-User Authentication may not work properly on github since its a static system, we may have to create constants for our users or eventually move away from github.
-User accounts might need the same thing.
-
-
 Things to Add:
 
-Add password requirement hidden before input and hidden when requirements met
 Add to Users Page
 Add error notice if email is already registered, push/suggest password reset
-Add customer-focused landing page/faq/help
 Account verification prompt
 Forgot password prompt
 Online/offline/available hours for each users
 Admin view
 Employee view
 Client view
-AI assistant
 Accessibility (Changed Nav bar to help)
-Cookies?
-
 
 Things to Fix:
 
-Register page box styling
-Change create an account/sign up on landing page to be a reach out link or login link instead
-About page: Our Team styling is off
+Fix landing page/add section, extend section
 Registration error pops-up even when registration was successful.
-Add logo to landing page
-Change landing page, faq, about to company page (more for if a company wanted to use a version for their specific purposes)
 Remove create new ticket from topbar on settings page
 Profile picture, pronouns style
 Dark Mode not on all pages
