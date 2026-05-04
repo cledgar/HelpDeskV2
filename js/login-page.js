@@ -17,7 +17,7 @@ loginForm.addEventListener("submit", async (event) => {
     const userLogin = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
     const errorMsg = document.getElementById("error-msg");
-    
+
     let email = userLogin;
 
     // Add this before the username lookup
@@ -51,7 +51,7 @@ loginForm.addEventListener("submit", async (event) => {
         errorMsg.textContent = "Invalid username or password";
         errorMsg.style.display = "block";
         return;
-    } 
+    }
 
     // Look for user within database with matching username and password
     const { data: profile, error: profileError } = await supabase
@@ -75,7 +75,7 @@ loginForm.addEventListener("submit", async (event) => {
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userData", JSON.stringify(profile));
     window.location.href = "/pages/dashboard.html";
-    
+
 });
 /** Temporary test - delete after debugging
 const { data, error } = await supabase
@@ -86,6 +86,12 @@ const { data, error } = await supabase
 
 console.log("data:", data);
 console.log("error:", error); */
+/**
+ * Redirect to the user registration page when the sign-up button is clicked.
+ */
+signUp.addEventListener("click", () => {
+    window.location.href = "/pages/user-registration.html";
+}); 
 /**
  * Redirect to the user registration page when the sign-up button is clicked.
  */

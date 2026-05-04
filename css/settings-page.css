@@ -241,6 +241,25 @@
     gap: 0.75rem;
     flex-shrink: 0;
 }
+.delete-btn {
+    background-color: #133e5e;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #1a5276;
+}
+
 
 .profile-pic-preview {
     width: 52px;

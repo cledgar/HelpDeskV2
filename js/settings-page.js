@@ -195,4 +195,43 @@ document.addEventListener("DOMContentLoaded", () => {
         saveStatus.classList.add("visible");
         setTimeout(() => saveStatus.classList.remove("visible"), 3000);
     });
+
+    // --- Delete Account Handler ---
+    const deleteAccountBtn = document.getElementById("delete-account-btn");
+    deleteAccountBtn.addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to permanently delete your account? This cannot be undone.")) {
+            return;
+        }
+
+        const storedUser = localStorage.getItem("userData");
+        if (!storedUser) {
+            alert("No user is currently logged in.");
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+
+        try {
+            const response = await fetch("/deleteAccount", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id: user.id, username: user.username })
+            });
+
+            const data = await response.json();
+            if (response.ok && data.success) {
+                localStorage.removeItem("userData");
+                localStorage.removeItem("isLoggedIn");
+                alert("Your account has been deleted.");
+                window.location.href = "/pages/login-page.html";
+            } else {
+                alert(data.message || "Unable to delete account. Please try again.");
+            }
+        } catch (error) {
+            console.error("Delete account error:", error);
+            alert("Error deleting account. Please try again.");
+        }
+    });
 });
