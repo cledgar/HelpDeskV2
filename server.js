@@ -7,9 +7,15 @@
 import express from "express";
 import morgan from "morgan";
 import Database from "better-sqlite3";
+import { createClient } from "@supabase/supabase-js";
+import cors from "cors";
 
 const app = express();
 const PORT = 8000;
+
+const SUPABASE_URL = "https://adnjlrxbqgerjlhgirlq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_sNNSlaz28kpULCpWkBCM3Q_OY6FN8cv";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Initialize databases
 // tickets.db stores support ticket information
@@ -29,7 +35,8 @@ ticketsDB.exec(`
         department TEXT NOT NULL DEFAULT 'General',
         status TEXT NOT NULL DEFAULT 'pending',
         createdBy TEXT NOT NULL,
-        createdAt TEXT NOT NULL
+        createdAt TEXT NOT NULL,
+        assignedTo TEXT
     )
 `);
 
@@ -41,6 +48,11 @@ try {
 }
 try {
     ticketsDB.exec(`ALTER TABLE tickets ADD COLUMN department TEXT NOT NULL DEFAULT 'General'`);
+} catch (error) {
+    // Column might already exist, ignore error
+}
+try {
+    ticketsDB.exec(`ALTER TABLE tickets ADD COLUMN assignedTo TEXT`);
 } catch (error) {
     // Column might already exist, ignore error
 }
@@ -58,6 +70,7 @@ userDB.exec(`
 `);
 
 // Middleware configuration
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 
 // HTTP request logging for development
@@ -71,13 +84,6 @@ app.use(express.static("./", { index: false }));
  */
 app.get("/", (req, res) => {
     res.sendFile("pages/login-page.html", { root: "./" });
-});
-
-/**
- * Start the server and listen on all network interfaces.
- */
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on your IP address or localhost:${PORT}`);
 });
 
 /**
@@ -131,16 +137,47 @@ app.post("/login", (req, res) => {
         const user = userDB.prepare("SELECT * FROM users WHERE username = ? AND password = ?").get(username, password);
 
         if (user) {
-            res.json({ 
-                success: true, 
-                message: `Logged in as ${user.role}`, 
-                user: { id: user.id, username: user.username, role: user.role } 
+            res.json({
+                success: true,
+                message: `Logged in as ${user.role}`,
+                user: { id: user.id, username: user.username, role: user.role }
             });
         } else {
             res.status(401).json({ success: false, message: "Invalid credentials" });
         }
     } catch (error) {
         console.error("Login error:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+/**
+ * DELETE /deleteAccount
+ * Deletes a user account from the local users database.
+ * @param {number} req.body.id - The ID of the user to delete.
+ * @param {string} req.body.username - The username of the user to delete.
+ */
+app.delete("/deleteAccount", (req, res) => {
+    const { id, username } = req.body;
+
+    if (!id && !username) {
+        return res.status(400).json({ success: false, message: "Account identifier missing" });
+    }
+
+    try {
+        const stmt = id
+            ? userDB.prepare("DELETE FROM users WHERE id = ?")
+            : userDB.prepare("DELETE FROM users WHERE username = ?");
+
+        const result = id ? stmt.run(id) : stmt.run(username);
+
+        if (result.changes > 0) {
+            res.json({ success: true, message: "Account deleted successfully" });
+        } else {
+            res.status(404).json({ success: false, message: "Account not found" });
+        }
+    } catch (error) {
+        console.error("Delete account error:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
@@ -154,17 +191,18 @@ app.post("/login", (req, res) => {
  * @param {string} req.body.department
  * @param {string} req.body.createdBy
  * @param {string} req.body.createdAt
+ * @param {string} req.body.assignedTo
  */
 app.post("/createTicket", (req, res) => {
     console.log("Server-Side ticket data:", req.body);
 
-    const { ticketTitle, ticketDescription, ticketPriority, department, createdBy, createdAt } = req.body;
+    const { ticketTitle, ticketDescription, ticketPriority, department, createdBy, createdAt, assignedTo } = req.body;
 
     if (ticketTitle && ticketDescription && ticketPriority && department) {
         try {
             const insertTicket = ticketsDB.prepare(`
-                INSERT INTO tickets (title, description, priority, department, status, createdBy, createdAt)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO tickets (title, description, priority, department, status, createdBy, createdAt, assignedTo)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `);
 
             const newTicket = {
@@ -174,13 +212,14 @@ app.post("/createTicket", (req, res) => {
                 department: department,
                 status: "pending",
                 createdBy: createdBy,
-                createdAt: createdAt
+                createdAt: createdAt,
+                assignedTo: assignedTo || null
             };
 
-            const result = insertTicket.run(newTicket.title, newTicket.description, newTicket.priority, newTicket.department, newTicket.status, newTicket.createdBy, newTicket.createdAt);
+            insertTicket.run(newTicket.title, newTicket.description, newTicket.priority, newTicket.department, newTicket.status, newTicket.createdBy, newTicket.createdAt, newTicket.assignedTo);
             console.log("Ticket saved to database.");
 
-            res.json({ success: true, message: "Ticket created successfully", ticket: { id: result.lastInsertRowid, ...newTicket } });
+            res.json({ success: true, message: "Ticket created successfully", ticket: newTicket });
         } catch (error) {
             console.error("Error creating ticket:", error);
             res.status(500).json({ success: false, message: "Error creating ticket" });
@@ -205,6 +244,67 @@ app.get("/getTickets", (req, res) => {
 });
 
 /**
+ * GET /getUsers
+ * Retrieves all users from the local SQLite database for assignment purposes.
+ */
+app.get("/getUsers", (req, res) => {
+    try {
+        const users = userDB.prepare("SELECT id, username FROM users").all();
+        console.log("Local users:", users);
+        res.json(users);
+    } catch (error) {
+        console.error("Error fetching users from local database:", error);
+        res.status(500).json({ success: false, message: "Error fetching users" });
+    }
+});
+
+/**
+ * PUT /updateTicket/:id
+ * Updates a ticket's assignment.
+ * @param {number} req.params.id - The ID of the ticket to update.
+ * @param {string} req.body.assignedTo - The username to assign the ticket to.
+ */
+app.put("/updateTicket/:id", (req, res) => {
+    const ticketID = parseInt(req.params.id);
+    const { assignedTo } = req.body;
+
+    try {
+        const result = ticketsDB.prepare("UPDATE tickets SET assignedTo = ? WHERE id = ?").run(assignedTo, ticketID);
+
+        if (result.changes > 0) {
+            res.json({ success: true, message: "Ticket updated successfully" });
+        } else {
+            res.status(404).json({ success: false, message: "Ticket not found" });
+        }
+    } catch (error) {
+        console.error("Error updating ticket:", error);
+        res.status(500).json({ success: false, message: "Error updating ticket" });
+    }
+});
+
+/**
+ * PUT /closeTicket/:id
+ * Closes a ticket by setting its status to 'closed'.
+ * @param {number} req.params.id - The ID of the ticket to close.
+ */
+app.put("/closeTicket/:id", (req, res) => {
+    const ticketID = parseInt(req.params.id);
+
+    try {
+        const result = ticketsDB.prepare("UPDATE tickets SET status = 'closed' WHERE id = ?").run(ticketID);
+
+        if (result.changes > 0) {
+            res.json({ success: true, message: "Ticket closed successfully" });
+        } else {
+            res.status(404).json({ success: false, message: "Ticket not found" });
+        }
+    } catch (error) {
+        console.error("Error closing ticket:", error);
+        res.status(500).json({ success: false, message: "Error closing ticket" });
+    }
+});
+
+/**
  * DELETE /deleteTicket/:id
  * Removes a ticket from the database by its ID.
  * @param {number} req.params.id - The ID of the ticket to delete.
@@ -224,4 +324,11 @@ app.delete("/deleteTicket/:id", (req, res) => {
         console.error("Error deleting ticket:", error);
         res.status(500).json({ success: false, message: "Error deleting ticket" });
     }
+});
+
+/**
+ * Start the server and listen on all network interfaces.
+ */
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on your IP address or localhost:${PORT}`);
 });

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/sidebar.css">
     <link rel="stylesheet" href="/css/topbar.css">
+    <link rel="stylesheet" href="/css/tickets-template.css">
 
     <!-- Font Awesome for Icons -->
     <script src="https://kit.fontawesome.com/d357d72767.js" crossorigin="anonymous"></script>
@@ -28,8 +29,8 @@
 
             <!-- Page-Specific Content -->
             <div class="content">
-                <!-- Placeholder for Ticket Management Content -->
-                Ticket Page Content
+                <!-- Ticket List Injection Point -->
+                <div id="ticket-container"></div>
             </div>
         </div>
     </div>
@@ -37,5 +38,6 @@
     <!-- Frontend logic for components -->
     <script type="module" src="/js/sidebar.js"></script>
     <script type="module" src="/js/topbar.js"></script>
+    <script type="module" src="/js/ticket-page.js"></script>
 </body>
 </html>
