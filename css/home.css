@@ -1,23 +1,12 @@
 /* Main Landing Section */
 .landing {
-    height: 1100px;
     max-width: 1100px;
     margin: 0 auto;
     padding: 5rem 2rem;
     display: flex;
     justify-content: center;
     gap: 4rem;
-}
-
-.landing-badge {
-    display: inline-block;
-    background: #e8f0f7;
-    color: #133e5e;
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 0.3rem 0.9rem;
-    border-radius: 2rem;
-    letter-spacing: 0.04rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .landing-title {
@@ -27,7 +16,7 @@
     font-size: 3rem;
     color: #133e5e;
     line-height: 1.15;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .landing-accent {
@@ -47,7 +36,7 @@
 }
 
 .landing-btns {
-    margin-top: 12rem;
+    margin-top: 5rem;
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
@@ -85,6 +74,185 @@
     border-color: #133e5e;
     color: #fff;
     background-color: rgba(44, 112, 162, 0.7);
+}
+
+/* How it works section */
+.how-it-works {
+    background: #fff;
+    padding: 5rem 2rem;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.how2-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.how2-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #133e5e;
+    text-align: center;
+    margin: 2rem 0 0.5rem 0;
+}
+
+.how2-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0 0 3rem 0;
+}
+
+.steps-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.step-card {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 2rem 1.5rem;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+    position: relative;
+}
+
+.step-num {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 28px;
+    background: #133e5e;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-icon {
+    width: 52px;
+    height: 52px;
+    background: #e8f0f7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #133e5e;
+    font-size: 1.2rem;
+    margin: 0 auto 1rem;
+}
+
+.step-card h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #133e5e;
+    margin: 0 0 0.5rem 0;
+}
+
+.step-card p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.step-connector {
+    color: #d1d5db;
+    font-size: 2rem;
+    padding: 0 1rem;
+    flex-shrink: 0;
+}
+
+/* Issue Categories Section */
+.categories {
+    background: #f8fafc;
+    padding: 5rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.categories-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #133e5e;
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+}
+
+.categories-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0 0 3rem 0;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.category-card {
+    background: #fff;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+
+.category-card:hover {
+    box-shadow: 0 4px 16px rgba(19, 62, 94, 0.1);
+    transform: translateY(-2px);
+    border-color: #133e5e;
+}
+
+.category-icon {
+    width: 44px;
+    height: 44px;
+    background: #e8f0f7;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #133e5e;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    transition: background 0.2s ease;
+}
+
+.category-card:hover .category-icon {
+    background: #133e5e;
+    color: #fff;
+}
+
+.category-card h3 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #133e5e;
+    margin: 0;
+}
+
+.category-card p {
+    font-size: 0.83rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* CTA Section */
@@ -131,9 +299,9 @@
 }
 
 .cta-btn.primary {
-    background: #0e2d45;
+    border: .5px solid #2373ad;
+    background: #2373ad;
     color: #fff;
-    border: .5px solid #133e5e;
 }
 
 .cta-btn.primary:hover {
@@ -152,4 +320,32 @@
     color: #fff;
     background-color: rgba(44, 112, 162, 0.7);
     border: .5px solid #d1d5db;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .steps-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .step-connector {
+        transform: rotate(90deg);
+        padding: 0.5rem 0;
+        text-align: center;
+    }
+
+    .step-card {
+        max-width: 100%;
+    }
+
+    .categories-card {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
 }
