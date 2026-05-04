@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/sidebar.css">
     <link rel="stylesheet" href="/css/topbar.css">
     <link rel="stylesheet" href="/css/settings-page.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
 
     <!-- Font Awesome for Icons -->
     <script src="https://kit.fontawesome.com/d357d72767.js" crossorigin="anonymous"></script>
@@ -49,25 +50,18 @@
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">Profile Picture</span>
-                                <span class="settings-desc">Upload a Photo</span>
+                                <span class="settings-desc">Upload a Photo - JPG, PNG or WebP, max 2MB</span>
                             </div>
-                            <input type="file" id="profilePic" accept="image/*">
-                            <img id="preview" src="#" alt="Image Preview" style="display:none;" />
-                            <script>
-                                document.getElementById("profilePic").addEventListener('change', function() {
-                                    let file = this.files[0];
-                                    let reader = new FileReader();
-
-                                    reader.onload = function (event) {
-                                        let base64String = event.target.result;
-                                        document.getElementById('preview').src = base64String;
-                                        document.getElementById('preview').style.display = 'block';
-                                        console.log(base64String);
-                                    };
-                                    reader.readAsDataURL(file);
-                                });
-                            </script>
-                            <!-- <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name"> -->
+                            <div class="profile-pic-control">
+                                <div class="profile-pic-preview" id="profile-pic-preview">
+                                    <img id="preview" src="#" alt="Profile Preview" style="display:none;">
+                                    <i class="fa-solid fa-user profile-pic-placeholder" id="profile-pic-placeholder"></i>
+                                </div>
+                                <label for="profilePic" class="profile-pic-upload-btn">
+                                    <i class="fa-solid fa-upload"></i> Choose Photo
+                                </label>
+                                <input type="file" id="profilePic" accept="image/*" style="display:none;">
+                            </div>
                         </div>
 
                         <!-- Settings to Change First Name -->
@@ -87,21 +81,19 @@
                             </div>
                             <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name">
                         </div>
+
                         <!-- Change Pronouns -->
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">Pronouns</span>
                                 <span class="settings-desc">Your preferred pronouns</span>
                             </div>
-                            <label for="pronouns">
-                                <select name="pronouns" id="pronouns">
-                                    <option value="select">Select One</option>
-                                    <option value="She/Her">She/Her</option>
-                                    <option value="He/Him">He/Him</option>
-                                    <option value="They/Them">They/Them</option>
-                                </select>
-                            </label>
-                            <!-- <input type="text" id="lastname-input" class="settings-input" placeholder="Enter Last Name"> -->
+                            <select name="pronouns" id="pronouns" class="settings-input settings-select">
+                                <option value="select">Select One</option>
+                                <option value="She/Her">She/Her</option>
+                                <option value="He/Him">He/Him</option>
+                                <option value="They/Them">They/Them</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -163,8 +155,10 @@
 
                     <!-- Adjustable Notifications Settings -->
                     <div class="settings-card">
-
-                        <!-- Toggle Ticket Notification Settings -->
+                        <div class="settings-coming-soon">
+                            <i class="fa-solid fa-clock"></i> Notification settings are coming soon.
+                        </div>
+                        <!-- Toggle Ticket Notification Settings
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">Ticket Updates</span>
@@ -176,7 +170,7 @@
                             </label>
                         </div>
 
-                        <!-- Toggle New Assingment Notifications -->
+                        Toggle New Assingment Notifications
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">New Assignments</span>
@@ -188,7 +182,7 @@
                             </label>
                         </div>
 
-                        <!-- Toggle System Announcement Notifications -->
+                        Toggle System Announcement Notifications
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">System Announcements</span>
@@ -199,6 +193,7 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
+                        -->
                     </div>
                 </div>
 
@@ -235,8 +230,11 @@
 
                     <!-- Adjustable Accessibility Settings -->
                     <div class="settings-card">
+                        <div class="settings-coming-soon">
+                            <i class="fa-solid fa-clock"></i> Accessibility settings are coming soon.
+                        </div>
 
-                        <!-- Toggle High Contrast Mode -->
+                        <!-- Toggle High Contrast Mode
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">High Contrast Mode</span>
@@ -248,7 +246,7 @@
                             </label>
                         </div>
 
-                        <!-- Adjust Font Size -->
+                        Adjust Font Size
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">Font Size</span>
@@ -260,7 +258,7 @@
                             </label>
                         </div>
 
-                        <!-- Adjust Font Type -->
+                        Adjust Font Type
                         <div class="settings-row">
                             <div class="settings-info">
                                 <span class="settings-label">Font Type</span>
@@ -271,6 +269,7 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
+                        -->
                     </div>
                 </div>
 

@@ -4,6 +4,7 @@
  */
 
 import {loadComponent} from "./utils.js";
+import { applyDarkMode } from "/js/dark-mode.js";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
