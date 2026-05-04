@@ -12,6 +12,34 @@ function getCurrentTimestamp() {
 }
 
 /**
+ * Populates the user assignment dropdown with available users.
+ */
+async function populateUserDropdown() {
+    const assignedToSelect = document.getElementById("assigned-to");
+    if (!assignedToSelect) return;
+
+    try {
+        const response = await fetch("/getUsers");
+        if (response.ok) {
+            const users = await response.json();
+            
+            // Clear existing options except the first one
+            assignedToSelect.innerHTML = '<option value="">Unassigned</option>';
+            
+            // Add user options
+            users.forEach(user => {
+                const option = document.createElement("option");
+                option.value = user.username;
+                option.textContent = user.username;
+                assignedToSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}
+
+/**
  * Initializes the ticket form functionality.
  * Sets up event listeners for opening/closing the modal and submitting the form.
  */
@@ -24,7 +52,8 @@ export function initTicketForm() {
 
     if (createTicketBtn && ticketModal) {
         // Show modal on 'Create Ticket' button click
-        createTicketBtn.addEventListener("click", () => {
+        createTicketBtn.addEventListener("click", async () => {
+            await populateUserDropdown();
             ticketModal.classList.remove("hidden");
         });
 
@@ -45,6 +74,7 @@ export function initTicketForm() {
             const ticketDescription = document.querySelector("#ticket-description").value;
             const ticketPriority = document.querySelector("#ticket-priority").value;
             const department = document.querySelector("#departments").value;
+            const assignedTo = document.querySelector("#assigned-to").value;
 
             // Get current user information from local storage (set during login)
             const userData = JSON.parse(localStorage.getItem("userData"));
@@ -60,7 +90,7 @@ export function initTicketForm() {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ ticketTitle, ticketDescription, ticketPriority, department, createdBy, createdAt })
+                    body: JSON.stringify({ ticketTitle, ticketDescription, ticketPriority, department, createdBy, createdAt, assignedTo: assignedTo || null })
                 });
 
                 const data = await response.json();
