@@ -38,7 +38,7 @@ async function applyRoleView() {
         currentPath.includes("login-page.html") ||
         currentPath.includes("user-registration.html") ||
         currentPath.includes("forgot-pw.html") ||
-        currentPath.includes("business.html") ||
+        currentPath.includes("business-page.html") ||
         currentPath.includes("faq.html") ||
         currentPath.includes("index.html") ||
         currentPath.includes("sales.html") ||
