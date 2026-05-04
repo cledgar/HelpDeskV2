@@ -130,59 +130,21 @@ app.post("/registerUser", (req, res) => {
  * @param {string} req.body.username
  * @param {string} req.body.password
  */
-app.post("/login", async (req, res) => {
+app.post("/login", (req, res) => {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ success: false, message: "Username and password are required" });
-    }
-
     try {
-        let email = username;
+        const user = userDB.prepare("SELECT * FROM users WHERE username = ? AND password = ?").get(username, password);
 
-        // Finds email by username
-        if (!username.includes("@")) {
-            const { data: users, error: lookupError } = await supabase
-                .from("users")
-                .select("email")
-                .ilike("username", username);
-
-            if (lookupError || !users || users.length === 0) {
-                return res.status(401).json({ success: false, message: "Username not found." });
-            }
-
-            email = users[0].email;
+        if (user) {
+            res.json({
+                success: true,
+                message: `Logged in as ${user.role}`,
+                user: { id: user.id, username: user.username, role: user.role }
+            });
+        } else {
+            res.status(401).json({ success: false, message: "Invalid credentials" });
         }
-
-        // Sign in with Supabase Auth
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
-
-
-        // No matching user found
-        if (error) {
-            return res.status(401).json({ success: false, message: "Invalid username or password" });
-        }
-
-        // Look for user within database with matching username and password
-        const { data: profile, error: profileError } = await supabase
-            .from("users")
-            .select("*")
-            .eq("id", data.user.id)
-            .single();
-
-        if (profileError || !profile) {
-            return res.status(401).json({ success: false, message: "Could not load user profile. Please try again." });
-        }
-
-        // User found - return user data
-        res.json({
-            success: true,
-            message: `Logged in as ${profile.role || 'user'}`,
-            user: profile
-        });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ success: false, message: "Server error" });
@@ -283,59 +245,16 @@ app.get("/getTickets", (req, res) => {
 
 /**
  * GET /getUsers
- * Retrieves all users from the Supabase database for assignment purposes.
- * Falls back to SQLite users if Supabase fails.
+ * Retrieves all users from the local SQLite database for assignment purposes.
  */
-app.get("/getUsers", async (req, res) => {
+app.get("/getUsers", (req, res) => {
     try {
-        const SUPABASE_URL = "https://adnjlrxbqgerjlhgirlq.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_sNNSlaz28kpULCpWkBCM3Q_OY6FN8cv";
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        const { data: users, error } = await supabase
-            .from("users")
-            .select("id, username");
-
-        console.log("Supabase users query result:", { data: users, error });
-
-        if (error) {
-            console.error("Error fetching users from Supabase:", error);
-            // Fall back to SQLite users
-            console.log("Falling back to SQLite users");
-            try {
-                const sqliteUsers = userDB.prepare("SELECT id, username FROM users").all();
-                console.log("SQLite users:", sqliteUsers);
-                res.json(sqliteUsers);
-                return;
-            } catch (sqliteError) {
-                console.error("SQLite fallback also failed:", sqliteError);
-                res.status(500).json({ success: false, message: "Error fetching users from both sources" });
-                return;
-            }
-        }
-
-        // Filter out users without usernames and ensure we have at least the default users
-        let filteredUsers = users ? users.filter(user => user.username) : [];
-
-        // If no users from Supabase, fall back to SQLite
-        if (filteredUsers.length === 0) {
-            console.log("No users from Supabase, falling back to SQLite");
-            const sqliteUsers = userDB.prepare("SELECT id, username FROM users").all();
-            filteredUsers = sqliteUsers;
-        }
-
-        console.log("Final users list:", filteredUsers);
-        res.json(filteredUsers);
+        const users = userDB.prepare("SELECT id, username FROM users").all();
+        console.log("Local users:", users);
+        res.json(users);
     } catch (error) {
-        console.error("Error fetching users:", error);
-        // Final fallback to SQLite
-        try {
-            const sqliteUsers = userDB.prepare("SELECT id, username FROM users").all();
-            res.json(sqliteUsers);
-        } catch (sqliteError) {
-            console.error("All user fetching methods failed:", sqliteError);
-            res.status(500).json({ success: false, message: "Error fetching users" });
-        }
+        console.error("Error fetching users from local database:", error);
+        res.status(500).json({ success: false, message: "Error fetching users" });
     }
 });
 
