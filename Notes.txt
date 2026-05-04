@@ -9,7 +9,6 @@ Forgot password prompt
 
 Things to Fix:
 
-Fix landing page/add section, extend section
 Remove create new ticket from topbar on settings page
 Profile picture, pronouns style
 Dark Mode not on all pages

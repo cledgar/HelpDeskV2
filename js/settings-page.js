@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const phoneNumberInput = document.getElementById("phoneNumber-input");
     const profilePicInput = document.getElementById("profilePic");
     const profilePreview = document.getElementById("preview");
+    const profilePlaceholder = document.getElementById("profile-pic-placeholder");
 
     // --- Loads the Settings Preferences from Local Storage ---
     function loadSettings() {
@@ -30,10 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
         darkModeToggle.checked = darkMode;
         applyDarkMode(darkMode);
 
+        /**
         // --- Load Notifications ---
         ticketsNotifToggle.checked = localStorage.getItem("ticketsNotif") !== "false";
         assignmentsNotifToggle.checked = localStorage.getItem("assignmentsNotif") !== "false";
         systemNotifToggle.checked = localStorage.getItem("systemNotif") !== "false";
+        */
 
         // --- Load Profile and Account ---
         const storedUser = localStorage.getItem("userData");
@@ -45,11 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
             lastNameInput.value = user.lastname || "";
             phoneNumberInput.value=user.phone || "";
 
-            // --- Load Profile Picture if saved ---
-            if (user.profilePic_url) {
-                profilePreview.src = user.profilePic_url;
-                profilePreview.style.display = "block";
-            }
         }
     }
 
@@ -95,9 +93,23 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.onload = (e) => {
             profilePreview.src = e.target.result;
             profilePreview.style.display = "block";
+            if (profilePlaceholder) profilePlaceholder.style.display = "none";
         };
         reader.readAsDataURL(file);
     });
+
+    // --- Load existing avatar on page load ---
+    const storedUser = localStorage.getItem("userData");
+    if (storedUser) {
+        const user = JSON.parse(storedUser);
+        if (user.profilePic_url && profilePreview) {
+            profilePreview.src = user.profilePic_url;
+            profilePreview.style.display = "block";
+            if (profilePlaceholder) {
+                profilePlaceholder.style.display = "none";
+            }
+        }
+    }
 
     // --- Upload Profile Picture to Supabase Storage ---
     async function uploadProfilePicture(userId) {
@@ -105,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!file) return null;
 
         // --- Store in a Folder Named After the User's ID ---
-        const filePath = '${userId}/${Date.now()}_${file.name}';
+        const filePath = `${userId}/${Date.now()}_${file.name}`;
 
         const { error: uploadError } = await supabase.storage
             .from("profile-pic")
@@ -130,10 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // --- Save Dark Mode Changes ---
         localStorage.setItem("darkMode", darkModeToggle.checked);
 
+        /**
         // --- Save Notification Changes ---
         localStorage.setItem("ticketsNotif", ticketsNotifToggle.checked);
         localStorage.setItem("assignmentsNotif", assignmentsNotifToggle.checked);
         localStorage.setItem("systemNotif", systemNotifToggle.checked);
+        */
 
         // --- Get Current User ---
         const storedUser = localStorage.getItem("userData");

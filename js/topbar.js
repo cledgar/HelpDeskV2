@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Display Profile Picture if Saved
     if (profilePic) {
         if (user.profilePic_url) {
-            profilePic.src = user.profielPic_url;
+            profilePic.src = user.profilePic_url;
         }
 
         // Toggle user dropdown menu visibilty on profile picture click
